@@ -1,12 +1,10 @@
-# Music game
-- Name:  
-
-# Music & Score
-- Derive from OSU! Mania!
-- 化簡一下譜面啦霸脫
-
-# Interface
-- Atari
-- 殺敵人去打譜
-
+# Tetris multiple player
+- [x] Deep Learning
+    - Auto tetris!
+    - It is a client and it would play automatically
+- [x] Internet connection
+- [x] One host and multiple clients
+- Special sound effects
+    - Fuiyo when wins
+    - Haiya when lose
 
