@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Hiya_Why_You_Use_Reinforcement_Learning_To_Play_Tetris_You_Dont_Know_How_To_Play_It_Yourself_Uncle_Roger_So_Sad_Now"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Hiya_Why_You_Use_Reinforcement_Learning_To_Play_Tetris_You_Dont_Know_How_To_Play_It_Yourself_Uncle_Roger_So_Sad_Now">
+				<Option output="/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Hiya_Why_You_Use_Reinforcement_Learning_To_Play_Tetris_You_Dont_Know_How_To_Play_It_Yourself_Uncle_Roger_So_Sad_Now" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/include"/>
+					<Add directory="/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/allegro/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 Hiya_Why_You_Use_Reinforcement_Learning_To_Play_Tetris_You_Dont_Know_How_To_Play_It_Yourself_Uncle_Roger_So_Sad_Now"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Hiya_Why_You_Use_Reinforcement_Learning_To_Play_Tetris_You_Dont_Know_How_To_Play_It_Yourself_Uncle_Roger_So_Sad_Now/fast">
+				<Option output="/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Hiya_Why_You_Use_Reinforcement_Learning_To_Play_Tetris_You_Dont_Know_How_To_Play_It_Yourself_Uncle_Roger_So_Sad_Now" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/include"/>
+					<Add directory="/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/allegro/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 Hiya_Why_You_Use_Reinforcement_Learning_To_Play_Tetris_You_Dont_Know_How_To_Play_It_Yourself_Uncle_Roger_So_Sad_Now/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/src/game.cpp">
+			<Option target="Hiya_Why_You_Use_Reinforcement_Learning_To_Play_Tetris_You_Dont_Know_How_To_Play_It_Yourself_Uncle_Roger_So_Sad_Now"/>
+		</Unit>
+		<Unit filename="/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/src/main.cpp">
+			<Option target="Hiya_Why_You_Use_Reinforcement_Learning_To_Play_Tetris_You_Dont_Know_How_To_Play_It_Yourself_Uncle_Roger_So_Sad_Now"/>
+		</Unit>
+		<Unit filename="/home/yi/Workspace/NTHU/I2P-II/ProgrammingII_FinalProject/Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
