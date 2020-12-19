@@ -5,10 +5,11 @@ project(${PROJECT_NAME})
 
 set(SOURCES
         src/main.cpp
-        src/game.cpp)
+        src/menu.cpp
+        src/game.cpp
+        src/window.cpp)
 
 include_directories(include)
-
 
 include_directories(allegro/include)
 link_directories(allegro/lib)

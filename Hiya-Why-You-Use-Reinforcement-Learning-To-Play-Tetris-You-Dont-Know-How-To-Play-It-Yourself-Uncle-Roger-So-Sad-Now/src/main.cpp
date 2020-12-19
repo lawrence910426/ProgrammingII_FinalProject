@@ -1,10 +1,11 @@
-#include "game.h"
+#include "window.h"
+#include "globals.h"
 
 int main(int argc, char *argv[]) {
-    auto *Game= new TetrisGame();
+    auto *window= new Window();
 
-//    Game->game_play();
+    window->Start();
 
-    delete Game;
+    delete window;
     return 0;
 }
