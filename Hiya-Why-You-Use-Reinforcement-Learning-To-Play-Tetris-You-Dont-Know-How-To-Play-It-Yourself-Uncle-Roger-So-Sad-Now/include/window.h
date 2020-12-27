@@ -14,8 +14,9 @@ class Window {
     Window();
     ~Window();
 
-    static void Start();
+    void Start();
 
  private:
     ALLEGRO_DISPLAY *display;
+    ALLEGRO_TIMER *tick;
 };

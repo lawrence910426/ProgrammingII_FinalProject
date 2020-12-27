@@ -15,7 +15,8 @@ include_directories(allegro/include)
 link_directories(allegro/lib)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+set(CMAKE_CXX_COMPILER /usr/bin/clang++ CACHE PATH "")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries( ${PROJECT_NAME}

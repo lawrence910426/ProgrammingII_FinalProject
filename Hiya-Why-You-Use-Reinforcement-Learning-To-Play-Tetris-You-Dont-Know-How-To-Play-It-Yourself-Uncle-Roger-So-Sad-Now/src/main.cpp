@@ -1,5 +1,4 @@
 #include "window.h"
-#include "globals.h"
 
 int main(int argc, char *argv[]) {
     auto *window= new Window();

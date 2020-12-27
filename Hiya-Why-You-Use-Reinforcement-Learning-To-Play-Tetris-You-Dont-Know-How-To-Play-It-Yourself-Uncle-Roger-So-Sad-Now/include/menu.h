@@ -8,16 +8,17 @@
 
 class Menu {
  public:
-    Menu();
+    Menu(ALLEGRO_DISPLAY*, ALLEGRO_TIMER*);
     ~Menu();
 
     GameType Start();
 
-    void Free();
  private:
     static bool init;
+    ALLEGRO_EVENT_QUEUE *eventQueue;
 
     void drawBackground();
+
 
 
 };
