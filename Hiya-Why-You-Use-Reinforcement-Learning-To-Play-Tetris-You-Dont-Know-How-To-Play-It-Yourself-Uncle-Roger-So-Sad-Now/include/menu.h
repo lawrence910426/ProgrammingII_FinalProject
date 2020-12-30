@@ -1,10 +1,11 @@
 #pragma once
 
+#include <string>
 #include <allegro5/allegro.h>
 
-#include <string>
-
 #include "globals.h"
+
+
 
 class Menu {
  public:

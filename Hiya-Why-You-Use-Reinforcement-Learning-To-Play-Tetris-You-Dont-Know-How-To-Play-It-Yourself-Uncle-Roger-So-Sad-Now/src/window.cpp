@@ -1,5 +1,7 @@
 #include "window.h"
 
+using namespace Constants;
+
 GameStatus gameStatus;
 
 Window::Window() {
@@ -15,6 +17,8 @@ Window::Window() {
     display = al_create_display(WINDOW_WIDTH, WINDOW_HEIGHT);
     if (!display)
         FATAL("Display init failed!")
+
+    init_colors();
 }
 
 Window::~Window() {

@@ -1,6 +1,10 @@
 #include "menu.h"
 #include "log.h"
 
+
+
+using namespace Constants;
+
 // TODO Menu
 
 bool Menu::init = false;
