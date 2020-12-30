@@ -1,6 +1,7 @@
 #pragma once
 
 #include "log.h"
+#include "tetriscontroller.h"
 
 #include <globals.h>
 #include <allegro5/allegro.h>
@@ -16,12 +17,14 @@ class Game {
 
 
 
-
  private:
     static void drawBackground();
-    static void updateScreen();
+    void updateScreen();
 
+    ALLEGRO_TIMER *fall;
     ALLEGRO_EVENT_QUEUE *eventQueue;
+
+    TetrisController *tc;
 
     GameType gameType;
 };

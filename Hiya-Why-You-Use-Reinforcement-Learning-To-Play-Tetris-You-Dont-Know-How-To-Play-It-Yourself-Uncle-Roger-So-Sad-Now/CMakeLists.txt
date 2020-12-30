@@ -1,3 +1,4 @@
+set(CMAKE_CXX_STANDARD 20)
 cmake_minimum_required(VERSION 3.17)
 
 set(PROJECT_NAME Hiya_Why_You_Use_Reinforcement_Learning_To_Play_Tetris_You_Dont_Know_How_To_Play_It_Yourself_Uncle_Roger_So_Sad_Now)
@@ -16,7 +17,6 @@ include_directories(include)
 include_directories(allegro/include)
 link_directories(allegro/lib)
 
-set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_COMPILER /usr/bin/clang++ CACHE PATH "")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 add_executable(${PROJECT_NAME} ${SOURCES})

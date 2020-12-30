@@ -10,22 +10,29 @@ Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
     if (!al_init_primitives_addon())
         FATAL("Primitives addon init failed!");
 
+    fall = al_create_timer(FALL_TIME);
+    if (!fall)
+        FATAL("Fall timer create failed");
+
     init_colors();
 
     al_register_event_source(eventQueue, al_get_display_event_source(display));
     al_register_event_source(eventQueue, al_get_timer_event_source(tick));
+    al_register_event_source(eventQueue, al_get_timer_event_source(fall));
     al_register_event_source(eventQueue, al_get_keyboard_event_source());
 
     gameType = type;
     if (type == GameType::SINGLE) {
 
     }
+
+    tc = new TetrisController();
 }
 
 Game::~Game() {
     al_destroy_event_queue(eventQueue);
+    delete tc;
 }
-
 
 GameResult Game::Start() {
     ALLEGRO_EVENT event;
@@ -37,10 +44,28 @@ GameResult Game::Start() {
                 return GameResult::EXIT;
 
             case ALLEGRO_EVENT_KEY_DOWN:
+                if (event.keyboard.keycode == ALLEGRO_KEY_RIGHT)
+                    tc->Move(false);
+                else if (event.keyboard.keycode == ALLEGRO_KEY_LEFT)
+                    tc->Move(true);
+                else if (event.keyboard.keycode == ALLEGRO_KEY_UP)
+                    tc->Rotate(false);
+                else if (event.keyboard.keycode == ALLEGRO_KEY_DOWN)
+                    tc->Fall();
+                else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE)
+                    tc->HardFall();
+                else if (event.keyboard.keycode == ALLEGRO_KEY_C)
+                    tc->Hold();
+                else if (event.keyboard.keycode == ALLEGRO_KEY_Z)
+                    tc->Rotate(true);
                 break;
 
             case ALLEGRO_EVENT_TIMER:
-                updateScreen();
+                if (event.timer.source == fall) {
+                    tc->Next();
+                } else { // tick
+                    updateScreen();
+                }
                 break;
         }
     }
@@ -48,6 +73,7 @@ GameResult Game::Start() {
 
 void Game::updateScreen() {
     drawBackground();
+    tc->Draw();
 
     al_flip_display();
 }
@@ -111,10 +137,10 @@ void Game::drawBackground() {
                               BORDER_INNER_WIDTH / 2.0, BORDER_INNER_WIDTH / 2.0,
                               BORDER_INNER_COLOR, BORDER_INNER_WIDTH);
 
-    for (int y = GARBAGE_BUFFER_Y + GARBAGE_BUFFER_HEIGHT; y >= GARBAGE_BUFFER_Y; y -= TILE_SIZE)
-        al_draw_line(GARBAGE_BUFFER_X, y,
-                     GARBAGE_BUFFER_X + GARBAGE_BUFFER_WIDTH, y,
-                     GIRD_COLOR, GIRD_WIDTH);
+//    for (int y = GARBAGE_BUFFER_Y + GARBAGE_BUFFER_HEIGHT; y >= GARBAGE_BUFFER_Y; y -= TILE_SIZE)
+//        al_draw_line(GARBAGE_BUFFER_X, y,
+//                     GARBAGE_BUFFER_X + GARBAGE_BUFFER_WIDTH, y,
+//                     GIRD_COLOR, GIRD_WIDTH);
 
     /// Preview area
     // Background

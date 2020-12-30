@@ -8,7 +8,6 @@ using namespace Constants;
 class TetrisController {
  public:
     TetrisController();
-    ~TetrisController();
 
     TetrisState Next();
 

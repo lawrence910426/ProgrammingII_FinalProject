@@ -11,6 +11,7 @@ static const int FPS = 60;
 static const int WINDOW_WIDTH = 1600;
 static const int WINDOW_HEIGHT = 900;
 
+static const double FALL_TIME = 1.0;
 
 static const int TILE_COUNT_H = 10;
 static const int TILE_COUNT_V = 20;
