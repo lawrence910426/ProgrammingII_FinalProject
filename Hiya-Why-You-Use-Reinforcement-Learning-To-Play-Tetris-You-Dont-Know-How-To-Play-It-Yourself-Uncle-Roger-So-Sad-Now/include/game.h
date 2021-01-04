@@ -21,7 +21,10 @@ class Game {
     static void drawBackground();
     void updateScreen();
 
+    void handleKeyPress(int keycode);
+
     ALLEGRO_TIMER *fall;
+    ALLEGRO_TIMER *das;
     ALLEGRO_EVENT_QUEUE *eventQueue;
 
     TetrisController *tc;

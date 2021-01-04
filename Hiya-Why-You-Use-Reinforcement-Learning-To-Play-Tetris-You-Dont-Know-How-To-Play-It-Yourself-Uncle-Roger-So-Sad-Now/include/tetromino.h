@@ -2,18 +2,31 @@
 
 using namespace Constants;
 
-
+#include <utility>
 
 class Tetromino {
  public:
-    Tetromino(int type);
+    Tetromino(int type, Board *board);
 
     void DrawActive();
-    void DrawPreview();
-    void DrawHold();
+    void DrawGhost();
+//    void DrawPreview();
+//    void DrawHold();
+//
+    bool Rotate(bool ccw);
 
-    void Rotate(Board&, bool ccw);
-    void Place(Board&);
+    void RotateBlock(bool ccw);
+    void Place();
+
+    bool CheckFree(int dx, int dy);
+
+    bool Move(bool left);
+
+    int DistanceToGround();
+
+    // Returns true if ready to land
+    bool Fall();
+
 
     int x = -1, y = -1;
 
@@ -66,5 +79,22 @@ class Tetromino {
     constexpr static const int block_sizes[] = {
         0, 3, 3, 2, 3, 3, 4, 3
     };
+
+    constexpr static const std::pair<int, int> wall_kick_offsets[][5] ={
+        { {0, 0}, {-1, 0}, {-1, 1}, {0, -2}, {-1, -2} },
+        { {0, 0}, {1, 0}, {1, -1}, {0, 2}, {1, 2} },
+        { {0, 0}, {1, 0}, {1, 1}, {0, -2}, {1, -2} },
+        { {0, 0}, {-1, 0}, {-1, -1}, {0, 2}, {-1, 2} }
+    };
+
+    constexpr static const std::pair<int, int> I_wall_kick_offsets[][5] ={
+        { {0, 0}, {-2, 0}, {1, 0}, {-2, -1}, {1, 2} },
+        { {0, 0}, {-1, 0}, {2, 0}, {-1, 2}, {2, -1} },
+        { {0, 0}, {2, 0}, {-1, 0}, {2, 1}, {-1, -2} },
+        { {0, 0}, {1, 0}, {-2, 0}, {1, -2}, {-2, 1} }
+    };
+
+ private:
+    Board *board;
 };
 

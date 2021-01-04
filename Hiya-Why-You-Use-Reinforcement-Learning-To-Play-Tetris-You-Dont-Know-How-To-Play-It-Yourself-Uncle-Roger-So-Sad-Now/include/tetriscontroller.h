@@ -13,19 +13,26 @@ class TetrisController {
 
     void Draw();
 
-    // Returns true if success
     bool Rotate(bool ccw);
     bool Hold();
     bool Move(bool left);
     bool Fall();
     bool HardFall();
 
+    void Place();
+
+    void NextTetromino();
+
  private:
-    Board rows;
+    Board board;
 
     TetrisState state;
 
-    Tetromino *falling;
+    Tetromino *falling = nullptr;
     Tetromino *next[5];
     Tetromino *hold;
+
+
+
+    int remaining_regret_times;
 };

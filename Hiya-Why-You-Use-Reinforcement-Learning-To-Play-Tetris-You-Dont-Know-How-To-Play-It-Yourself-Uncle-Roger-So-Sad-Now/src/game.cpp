@@ -2,6 +2,8 @@
 
 using namespace Constants;
 
+#include <map>
+
 Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
     eventQueue = al_create_event_queue();
     if (!eventQueue)
@@ -14,11 +16,16 @@ Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
     if (!fall)
         FATAL("Fall timer create failed");
 
+    das = al_create_timer(DAS_INTERVAL_SECONDS);
+        if (!das)
+            FATAL("DAS timer create failed");
+
     init_colors();
 
     al_register_event_source(eventQueue, al_get_display_event_source(display));
     al_register_event_source(eventQueue, al_get_timer_event_source(tick));
     al_register_event_source(eventQueue, al_get_timer_event_source(fall));
+    al_register_event_source(eventQueue, al_get_timer_event_source(das));
     al_register_event_source(eventQueue, al_get_keyboard_event_source());
 
     gameType = type;
@@ -36,6 +43,12 @@ Game::~Game() {
 
 GameResult Game::Start() {
     ALLEGRO_EVENT event;
+    al_start_timer(fall);
+    al_start_timer(das);
+
+    // keycode -> holding, last_hold_time
+    std::map<int, std::pair<bool, double>> das_map;
+
     for (;;) {
         al_wait_for_event(eventQueue, &event);
 
@@ -44,31 +57,60 @@ GameResult Game::Start() {
                 return GameResult::EXIT;
 
             case ALLEGRO_EVENT_KEY_DOWN:
-                if (event.keyboard.keycode == ALLEGRO_KEY_RIGHT)
-                    tc->Move(false);
-                else if (event.keyboard.keycode == ALLEGRO_KEY_LEFT)
-                    tc->Move(true);
-                else if (event.keyboard.keycode == ALLEGRO_KEY_UP)
-                    tc->Rotate(false);
-                else if (event.keyboard.keycode == ALLEGRO_KEY_DOWN)
-                    tc->Fall();
-                else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE)
-                    tc->HardFall();
-                else if (event.keyboard.keycode == ALLEGRO_KEY_C)
-                    tc->Hold();
-                else if (event.keyboard.keycode == ALLEGRO_KEY_Z)
-                    tc->Rotate(true);
+                handleKeyPress(event.keyboard.keycode);
+
+                switch (event.keyboard.keycode) {
+                    case ALLEGRO_KEY_LEFT:
+                    case ALLEGRO_KEY_RIGHT:
+                    case ALLEGRO_KEY_DOWN:
+                        das_map[event.keyboard.keycode] = {true, al_get_time()};
+                }
+                break;
+
+            case ALLEGRO_EVENT_KEY_UP:
+                switch (event.keyboard.keycode) {
+                    case ALLEGRO_KEY_LEFT:
+                    case ALLEGRO_KEY_RIGHT:
+                    case ALLEGRO_KEY_DOWN:
+                        das_map[event.keyboard.keycode].first = false;
+                }
                 break;
 
             case ALLEGRO_EVENT_TIMER:
                 if (event.timer.source == fall) {
                     tc->Next();
+                } else if (event.timer.source == das) {
+                    for (auto& [keycode, val]: das_map) {
+                        auto &[holding, last_hold_time] = val;
+                        if (holding) {
+                            if (al_get_time() - last_hold_time >= DAS_HOLD_SECONDS) {
+                                handleKeyPress(keycode);
+                            }
+                        }
+                    }
                 } else { // tick
                     updateScreen();
                 }
                 break;
         }
     }
+}
+
+void Game::handleKeyPress(int keycode) {
+    if (keycode == ALLEGRO_KEY_RIGHT)
+        tc->Move(false);
+    else if (keycode == ALLEGRO_KEY_LEFT)
+        tc->Move(true);
+    else if (keycode == ALLEGRO_KEY_UP)
+        tc->Rotate(false);
+    else if (keycode == ALLEGRO_KEY_DOWN)
+        tc->Fall();
+    else if (keycode == ALLEGRO_KEY_SPACE)
+        tc->HardFall();
+    else if (keycode == ALLEGRO_KEY_C)
+        tc->Hold();
+    else if (keycode == ALLEGRO_KEY_Z)
+        tc->Rotate(true);
 }
 
 void Game::updateScreen() {
@@ -158,4 +200,5 @@ void Game::drawBackground() {
                               BORDER_INNER_COLOR, BORDER_INNER_WIDTH);
 
 }
+
 

@@ -3,7 +3,7 @@
 #include <allegro5/allegro_font.h>
 #include <queue>
 #include <vector>
-
+#include <random>
 
 namespace Constants {
 
@@ -48,6 +48,11 @@ static const int PREVIEW_AREA_Y = GAMEPLAY_Y;
 static const int PREVIEW_AREA_WIDTH = MINI_TILE_SIZE * 5;
 static const int PREVIEW_AREA_HEIGHT = MINI_TILE_SIZE * 4 * 5;
 
+static const double DAS_HOLD_SECONDS = 0.3;
+static const double DAS_INTERVAL_SECONDS = 0.06;
+
+static const int LANDING_REGRET_TIMES = 3;
+
 
 static ALLEGRO_COLOR BACKGROUND_COLOR;
 static ALLEGRO_COLOR GAMEPLAY_BG_COLOR;
@@ -67,6 +72,14 @@ inline void init_colors() {
     BORDER_INNER_COLOR = al_map_rgb(36, 133, 122);
 }
 
+}
+
+
+inline int randint(int from, int to) {
+    std::random_device rd;
+    auto gen = std::mt19937(rd());
+    auto dis = std::uniform_int_distribution<int>(from, to);
+    return dis(gen);
 }
 
 
