@@ -2,6 +2,8 @@
 
 using namespace Constants;
 
+#include <allegro5/allegro_image.h>
+
 GameStatus gameStatus;
 
 Window::Window() {
@@ -17,6 +19,9 @@ Window::Window() {
     display = al_create_display(WINDOW_WIDTH, WINDOW_HEIGHT);
     if (!display)
         FATAL("Display init failed!")
+
+    if(!al_init_image_addon())
+        FATAL("Image addon init failed!");
 
     init_colors();
 }

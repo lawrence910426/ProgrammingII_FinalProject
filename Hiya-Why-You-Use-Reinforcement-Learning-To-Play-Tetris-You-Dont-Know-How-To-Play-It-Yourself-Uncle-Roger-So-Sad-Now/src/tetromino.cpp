@@ -1,10 +1,10 @@
 #include "tetromino.h"
 #include "log.h"
+#include "tetriscontroller.h"
 
 #include <cstring>
 #include <algorithm>
 #include <allegro5/allegro_primitives.h>
-
 
 Tetromino::Tetromino(int type, Board *b) {
     memcpy(block, block_types[type], sizeof(block));
@@ -14,6 +14,8 @@ Tetromino::Tetromino(int type, Board *b) {
         is_I_block = true;
 
     board = b;
+
+
 }
 
 void Tetromino::DrawActive() {
@@ -25,9 +27,14 @@ void Tetromino::DrawActive() {
 
 
             const int px = x + j, py = y + (block_size - i - 1);
-            al_draw_filled_rectangle(GAMEPLAY_X + TILE_SIZE * px, GAMEPLAY_Y + TILE_SIZE * (TILE_COUNT_V - py - 1),
-                                     GAMEPLAY_X + TILE_SIZE * (px + 1), GAMEPLAY_Y + TILE_SIZE * (TILE_COUNT_V - py),
-                                     al_map_rgb(244, 128, 36));
+//            al_draw_filled_rectangle(GAMEPLAY_X + TILE_SIZE * px, GAMEPLAY_Y + TILE_SIZE * (TILE_COUNT_V - py - 1),
+//                                     GAMEPLAY_X + TILE_SIZE * (px + 1), GAMEPLAY_Y + TILE_SIZE * (TILE_COUNT_V - py),
+//                                     al_map_rgb(244, 128, 36));
+            al_draw_scaled_bitmap(TetrisController::tetrimino_textures[int(block[i][j])],
+                                  0, 0, TETROMINO_BLOCK_TEXTURE_SIZE, TETROMINO_BLOCK_TEXTURE_SIZE,
+                                  GAMEPLAY_X + TILE_SIZE * px, GAMEPLAY_Y + TILE_SIZE * (TILE_COUNT_V - py - 1),
+                                  TILE_SIZE, TILE_SIZE,
+                                  0);
         }
     }
 }
@@ -60,10 +67,13 @@ bool Tetromino::CheckFree(int nx, int ny) {
 
 bool Tetromino::Fall() {
 //    INFO(x << " " << y << " " << CheckFree(x, y - 1));
-    if (!CheckFree(x, y - 1))
+    if (!CanFall())
         return true;
 
     y--;
+
+    if (!CanFall())
+        return true;
     return false;
 }
 
@@ -130,8 +140,7 @@ bool Tetromino::Rotate(bool ccw) {
     }
 
     for (int i = 0; i < 5; i++) {
-        int dx, dy;
-        std::tie(dx, dy) = is_I_block? I_wall_kick_offsets[kick_id][i]: wall_kick_offsets[kick_id][i];
+        auto [dx, dy] = is_I_block? I_wall_kick_offsets[kick_id][i]: wall_kick_offsets[kick_id][i];
         if (ccw) {
             dx = -dx;
             dy = -dy;
@@ -164,4 +173,7 @@ void Tetromino::RotateBlock(bool ccw) {
                 new_block[i][j] = block[block_size - j - 1][i];
     }
     memcpy(block, new_block, sizeof(block));
+}
+bool Tetromino::CanFall() {
+    return CheckFree(x, y - 1);
 }

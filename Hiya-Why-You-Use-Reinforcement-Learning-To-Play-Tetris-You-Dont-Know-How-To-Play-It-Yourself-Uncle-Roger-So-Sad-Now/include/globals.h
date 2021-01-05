@@ -60,6 +60,9 @@ static ALLEGRO_COLOR GIRD_COLOR;
 static ALLEGRO_COLOR BORDER_OUTER_COLOR;
 static ALLEGRO_COLOR BORDER_INNER_COLOR;
 
+
+static const int TETROMINO_BLOCK_TEXTURE_SIZE = 45;
+
 //
 //    static const int PREVIEW_WIDTH;
 //    static const int PREVIEW_HEIGHT;
@@ -104,7 +107,7 @@ enum class TetrisState {
 };
 
 enum class Tile {
-    NONE, RED, ORANGE, YELLOW, GREEN, BLUE, SKY, PURPLE
+    NONE, RED, ORANGE, YELLOW, GREEN, BLUE, SKY, PURPLE, GRAY
 };
 
 struct Position {

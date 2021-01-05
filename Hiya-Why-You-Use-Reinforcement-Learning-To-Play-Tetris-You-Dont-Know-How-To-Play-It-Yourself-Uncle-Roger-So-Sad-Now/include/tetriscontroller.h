@@ -1,3 +1,4 @@
+#pragma once
 #include "globals.h"
 
 using namespace Constants;
@@ -23,6 +24,11 @@ class TetrisController {
 
     void NextTetromino();
 
+    void CheckLines();
+    void ClearLine(int y);
+
+    static ALLEGRO_BITMAP *tetrimino_textures[9];
+
  private:
     Board board;
 
@@ -32,6 +38,7 @@ class TetrisController {
     Tetromino *next[5];
     Tetromino *hold;
 
+    static bool textures_loaded;
 
 
     int remaining_regret_times;
