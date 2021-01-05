@@ -11,7 +11,7 @@ static const int FPS = 60;
 static const int WINDOW_WIDTH = 1600;
 static const int WINDOW_HEIGHT = 900;
 
-static const double FALL_TIME = 1.0;
+static const double FALL_TIME = 0.75;
 
 static const int TILE_COUNT_H = 10;
 static const int TILE_COUNT_V = 20;
@@ -43,15 +43,17 @@ static const int GARBAGE_BUFFER_WIDTH = TILE_SIZE;
 static const int GARBAGE_BUFFER_HEIGHT = GAMEPLAY_HEIGHT - HOLDAREA_SIZE - (2*BORDER_OUTER_WIDTH - (BORDER_OUTER_WIDTH - BORDER_INNER_WIDTH));
 
 
+
+static const int PREVIEW_COUNT = 5;
 static const int PREVIEW_AREA_X = GAMEPLAY_X + GAMEPLAY_WIDTH + (2*BORDER_OUTER_WIDTH - (BORDER_OUTER_WIDTH - BORDER_INNER_WIDTH));
 static const int PREVIEW_AREA_Y = GAMEPLAY_Y;
-static const int PREVIEW_AREA_WIDTH = MINI_TILE_SIZE * 5;
-static const int PREVIEW_AREA_HEIGHT = MINI_TILE_SIZE * 4 * 5;
+static const int PREVIEW_AREA_WIDTH = MINI_TILE_SIZE * PREVIEW_COUNT;
+static const int PREVIEW_AREA_HEIGHT = MINI_TILE_SIZE * 4 * PREVIEW_COUNT;
 
-static const double DAS_HOLD_SECONDS = 0.3;
+static const double DAS_HOLD_SECONDS = 0.2;
 static const double DAS_INTERVAL_SECONDS = 0.06;
 
-static const int LANDING_REGRET_TIMES = 3;
+static const int LANDING_REGRET_TIMES = 5;
 
 
 static ALLEGRO_COLOR BACKGROUND_COLOR;
@@ -63,9 +65,11 @@ static ALLEGRO_COLOR BORDER_INNER_COLOR;
 
 static const int TETROMINO_BLOCK_TEXTURE_SIZE = 45;
 
-//
-//    static const int PREVIEW_WIDTH;
-//    static const int PREVIEW_HEIGHT;
+
+static const double TETROMINO_GHOST_ALPHA = 0.3;
+static const double TETROMINO_BOARD_ALPHA = 0.75;
+
+
 
 inline void init_colors() {
     BACKGROUND_COLOR = al_map_rgb(210, 210, 210);
@@ -86,7 +90,10 @@ inline int randint(int from, int to) {
 }
 
 
-
+inline void al_reset_timer(ALLEGRO_TIMER  *timer) {
+    al_stop_timer(timer);
+    al_start_timer(timer);
+}
 
 enum class GameStatus {
   MENU, CONNECTING, LOADING, PLAYING, ENDING, EXIT
@@ -107,7 +114,15 @@ enum class TetrisState {
 };
 
 enum class Tile {
-    NONE, RED, ORANGE, YELLOW, GREEN, BLUE, SKY, PURPLE, GRAY
+    NONE,
+    RED, // Z Block
+    ORANGE, // L Block
+    YELLOW, // O Block
+    GREEN, // S Block
+    BLUE, // J Block
+    SKY, // I Block
+    PURPLE, // T Block
+    GRAY // Garbage Blocks
 };
 
 struct Position {

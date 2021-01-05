@@ -7,13 +7,11 @@ using namespace Constants;
 
 class Tetromino {
  public:
-    Tetromino(int type, Board *board);
+    Tetromino(Tile type, Board &board);
 
-    void DrawActive();
-    void DrawGhost();
-//    void DrawPreview();
-//    void DrawHold();
-//
+    void Draw();
+    void DrawBlocks(int posx, int posy, double alpha);
+
     bool Rotate(bool ccw);
 
     void RotateBlock(bool ccw);
@@ -26,8 +24,10 @@ class Tetromino {
 
     int DistanceToGround();
 
-    // Returns true if ready to land
-    bool Fall();
+    void Fall();
+    void HardFall();
+
+    bool Success();
 
 
     int x = -1, y = -1;
@@ -37,6 +37,10 @@ class Tetromino {
 
     int block_size;
     Tile block[4][4];
+
+    Tile type;
+
+    bool creation_success = false;
 
 
     constexpr static const Tile block_types[][4][4] = {
@@ -98,6 +102,6 @@ class Tetromino {
 
 
  private:
-    Board *board;
+    Board &board;
 };
 

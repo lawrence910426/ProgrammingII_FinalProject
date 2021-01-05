@@ -6,31 +6,44 @@
 #include <algorithm>
 #include <allegro5/allegro_primitives.h>
 
-Tetromino::Tetromino(int type, Board *b) {
-    memcpy(block, block_types[type], sizeof(block));
-    block_size = block_sizes[type];
+Tetromino::Tetromino(Tile t, Board &b) : type(t), board(b) {
+    memcpy(block, block_types[int(type)], sizeof(block));
+    block_size = block_sizes[int(type)];
 
-    if (type == 6)
+    if (type == Tile::SKY)
         is_I_block = true;
 
-    board = b;
+    x = (TILE_COUNT_H - block_size) / 2;
 
-
+    for (int i = TILE_COUNT_V - block_size; i < TILE_COUNT_V + block_size; i++) {
+        if (CheckFree(x, i)) {
+            y = i;
+            creation_success = true;
+            break;
+        }
+    }
 }
 
-void Tetromino::DrawActive() {
-    DrawGhost();
+void Tetromino::Draw() {
+    int to_ground = DistanceToGround();
+    DrawBlocks(x, y - to_ground, TETROMINO_GHOST_ALPHA); // Ghost
+
+    DrawBlocks(x, y, 1.0);
+}
+
+void Tetromino::DrawBlocks(int posx, int posy, double alpha) {
     for (int i = 0; i < block_size; i++) {
         for (int j = 0; j < block_size; j++) {
             if (block[i][j] == Tile::NONE)
                 continue;
 
 
-            const int px = x + j, py = y + (block_size - i - 1);
+            const int px = posx + j, py = posy + (block_size - i - 1);
 //            al_draw_filled_rectangle(GAMEPLAY_X + TILE_SIZE * px, GAMEPLAY_Y + TILE_SIZE * (TILE_COUNT_V - py - 1),
 //                                     GAMEPLAY_X + TILE_SIZE * (px + 1), GAMEPLAY_Y + TILE_SIZE * (TILE_COUNT_V - py),
 //                                     al_map_rgb(244, 128, 36));
-            al_draw_scaled_bitmap(TetrisController::tetrimino_textures[int(block[i][j])],
+            al_draw_tinted_scaled_bitmap(TetrisController::tetrimino_textures[int(block[i][j])],
+                                  al_map_rgba_f(alpha, alpha, alpha, alpha),
                                   0, 0, TETROMINO_BLOCK_TEXTURE_SIZE, TETROMINO_BLOCK_TEXTURE_SIZE,
                                   GAMEPLAY_X + TILE_SIZE * px, GAMEPLAY_Y + TILE_SIZE * (TILE_COUNT_V - py - 1),
                                   TILE_SIZE, TILE_SIZE,
@@ -58,23 +71,18 @@ bool Tetromino::CheckFree(int nx, int ny) {
             const int px = nx + j, py = ny + (block_size - i - 1);
             if (px < 0 || px >= TILE_COUNT_H || py < 0)
                 return false;
-            if ((*board)[py][px] != Tile::NONE)
+            if (board[py][px] != Tile::NONE)
                 return false;
         }
     }
     return true;
 }
 
-bool Tetromino::Fall() {
-//    INFO(x << " " << y << " " << CheckFree(x, y - 1));
+void Tetromino::Fall() {
     if (!CanFall())
-        return true;
+        return;
 
     y--;
-
-    if (!CanFall())
-        return true;
-    return false;
 }
 
 void Tetromino::Place() {
@@ -84,23 +92,7 @@ void Tetromino::Place() {
                 continue;
 
             const int px = x + j, py = y + (block_size - i - 1);
-            (*board)[py][px] = block[i][j];
-        }
-    }
-}
-
-void Tetromino::DrawGhost() {
-    int to_ground = DistanceToGround();
-    for (int i = 0; i < block_size; i++) {
-        for (int j = 0; j < block_size; j++) {
-            if (block[i][j] == Tile::NONE)
-                continue;
-
-
-            const int px = x + j, py = y + (block_size - i - 1) - to_ground;
-            al_draw_rectangle(GAMEPLAY_X + TILE_SIZE * px, GAMEPLAY_Y + TILE_SIZE * (TILE_COUNT_V - py - 1),
-                                     GAMEPLAY_X + TILE_SIZE * (px + 1), GAMEPLAY_Y + TILE_SIZE * (TILE_COUNT_V - py),
-                                     al_map_rgb(244, 128, 36), GIRD_WIDTH);
+            board[py][px] = block[i][j];
         }
     }
 }
@@ -114,7 +106,7 @@ int Tetromino::DistanceToGround() {
                 const int px = x + j, py = y + (block_size - i - 1);
                 int d = 0;
                 for (int k = py - 1; k >= 0; k--) {
-                    if ((*board)[k][px] != Tile::NONE)
+                    if (board[k][px] != Tile::NONE)
                         break;
                     d++;
                 }
@@ -174,6 +166,15 @@ void Tetromino::RotateBlock(bool ccw) {
     }
     memcpy(block, new_block, sizeof(block));
 }
+
 bool Tetromino::CanFall() {
     return CheckFree(x, y - 1);
+}
+
+void Tetromino::HardFall() {
+    y -= DistanceToGround();
+}
+
+bool Tetromino::Success() {
+    return creation_success;
 }

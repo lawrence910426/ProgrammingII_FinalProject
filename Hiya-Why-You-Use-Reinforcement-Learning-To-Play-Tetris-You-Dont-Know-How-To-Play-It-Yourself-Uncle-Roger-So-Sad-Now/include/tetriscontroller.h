@@ -17,8 +17,8 @@ class TetrisController {
     bool Rotate(bool ccw);
     bool Hold();
     bool Move(bool left);
-    bool Fall();
-    bool HardFall();
+    void Fall();
+    void HardFall();
 
     void Place();
 
@@ -35,8 +35,9 @@ class TetrisController {
     TetrisState state;
 
     Tetromino *falling = nullptr;
-    Tetromino *next[5];
-    Tetromino *hold;
+    std::queue<Tile> next_queue;
+    Tile hold = Tile::NONE;
+    bool last_hold = false;
 
     static bool textures_loaded;
 

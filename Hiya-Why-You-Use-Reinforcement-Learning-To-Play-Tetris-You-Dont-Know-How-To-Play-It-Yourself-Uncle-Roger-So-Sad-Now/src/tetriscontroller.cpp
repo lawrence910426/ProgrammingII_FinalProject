@@ -11,8 +11,10 @@ TetrisController::TetrisController() {
     for (int i = 0; i < TILE_COUNT_V + 5; i++)
         board.emplace_back(std::vector<Tile>(TILE_COUNT_H, Tile::NONE));
 
-    state = TetrisState::LANDED;
+    for (int i = 0; i < PREVIEW_COUNT; i++)
+        next_queue.emplace(Tile(randint(1, 7)));
 
+    state = TetrisState::LANDED;
 
     if (!textures_loaded) {
         tetrimino_textures[int(Tile::RED)] = al_load_bitmap("../assets/block-red.png");
@@ -29,7 +31,7 @@ TetrisController::TetrisController() {
 
 void TetrisController::Draw() {
     if (falling != nullptr)
-        falling->DrawActive();
+        falling->Draw();
     for (int i = 0; i < TILE_COUNT_V; i++) {
         for (int j = 0; j < TILE_COUNT_H; j++) {
             if (board[i][j] == Tile::NONE)
@@ -37,66 +39,99 @@ void TetrisController::Draw() {
 //            al_draw_filled_rectangle(GAMEPLAY_X + TILE_SIZE * j, GAMEPLAY_Y + TILE_SIZE * (TILE_COUNT_V - i - 1),
 //                                     GAMEPLAY_X + TILE_SIZE * (j + 1), GAMEPLAY_Y + TILE_SIZE * (TILE_COUNT_V - i),
 //                                     al_map_rgb(244, 128, 36));
-            al_draw_scaled_bitmap(tetrimino_textures[int(board[i][j])],
-                                  0, 0, TETROMINO_BLOCK_TEXTURE_SIZE, TETROMINO_BLOCK_TEXTURE_SIZE,
-                                  GAMEPLAY_X + TILE_SIZE * j, GAMEPLAY_Y + TILE_SIZE * (TILE_COUNT_V - i - 1),
-                                  TILE_SIZE, TILE_SIZE,
-                                  0);
+            al_draw_tinted_scaled_bitmap(tetrimino_textures[int(board[i][j])],
+                                         al_map_rgba_f(TETROMINO_BOARD_ALPHA, TETROMINO_BOARD_ALPHA, TETROMINO_BOARD_ALPHA, TETROMINO_BOARD_ALPHA),
+                                         0, 0, TETROMINO_BLOCK_TEXTURE_SIZE, TETROMINO_BLOCK_TEXTURE_SIZE,
+                                         GAMEPLAY_X + TILE_SIZE * j, GAMEPLAY_Y + TILE_SIZE * (TILE_COUNT_V - i - 1),
+                                         TILE_SIZE, TILE_SIZE,
+                                         0);
         }
     }
 }
 
 bool TetrisController::Hold() {
-    return false;
+    if (falling == nullptr || last_hold)
+        return false;
+
+    Tile to_hold = falling->type;
+    std::swap(hold, to_hold);
+
+    delete falling;
+    falling = nullptr;
+
+    if (to_hold == Tile::NONE)
+        NextTetromino();
+    else {
+        falling = new Tetromino(to_hold, board);
+        if (!falling->Success())
+            state = TetrisState::LOSE;
+    }
+
+    last_hold = true;
+    return true;
 }
 
 bool TetrisController::Rotate(bool ccw) {
     if (falling == nullptr)
         return false;
-    return falling->Rotate(ccw);
+    bool success = falling->Rotate(ccw);
+    if (!success)
+        return false;
+
+    if (remaining_regret_times > 0 && state == TetrisState::LANDING) {
+        remaining_regret_times--;
+        state = TetrisState::FALLING;
+    }
+
+    return true;
 }
 
 bool TetrisController::Move(bool left) {
     if (falling == nullptr)
         return false;
+    bool success = falling->Move(left);
+    if (!success)
+        return false;
+
     if (remaining_regret_times > 0 && state == TetrisState::LANDING) {
         remaining_regret_times--;
         state = TetrisState::FALLING;
     }
-    return falling->Move(left);
-}
 
-bool TetrisController::Fall() {
-    if (falling == nullptr)
-        return false;
-    bool landing = falling->Fall();
-    if (landing)
-        state = TetrisState::LANDING;
-    return falling;
-}
-
-bool TetrisController::HardFall() {
-    if (state == TetrisState::FALLING) {
-        falling->y -= falling->DistanceToGround();
-        Place();
-    }
     return true;
 }
 
+void TetrisController::Fall() {
+    if (state != TetrisState::FALLING || falling == nullptr)
+        return;
+
+    falling->Fall();
+
+    if (!falling->CanFall()) {
+        if (remaining_regret_times <= 0)
+            Place();
+        else
+            state = TetrisState::LANDING;
+    }
+}
+
+void TetrisController::HardFall() {
+    if (state == TetrisState::FALLING) {
+        falling->HardFall();
+        Place();
+    }
+}
+
 TetrisState TetrisController::Next() {
-//    if (falling != nullptr)
-//        INFO(falling->x << " " << falling->y);
     if (state == TetrisState::LANDED) {
         NextTetromino();
-        state = TetrisState::FALLING;
     } else if (state == TetrisState::FALLING) {
-        const bool landing = Fall();
-        if (landing && remaining_regret_times <= 0)
-            Place();
+        Fall();
     } else if (state == TetrisState::LANDING) {
         if (falling->CanFall()) {
             state = TetrisState::FALLING;
             remaining_regret_times--;
+            Fall();
         } else {
             Place();
         }
@@ -105,12 +140,20 @@ TetrisState TetrisController::Next() {
 }
 
 void TetrisController::NextTetromino() {
-    falling = new Tetromino(randint(1, 7), &board);
-    falling->y = 16;
-    do {
-        falling->x = randint(0, TILE_COUNT_H - 1);
-    } while (!falling->CheckFree(falling->x, falling->y));
+    Tile next = next_queue.front();
+    next_queue.pop();
+    next_queue.emplace(Tile(randint(1, 7)));
+
+    falling = new Tetromino(next, board);
+    if (!falling->Success()) {
+        state = TetrisState::LOSE;
+        return;
+    }
+
     remaining_regret_times = LANDING_REGRET_TIMES;
+
+    last_hold = false;
+    state = TetrisState::FALLING;
 }
 
 void TetrisController::Place() {
@@ -119,15 +162,25 @@ void TetrisController::Place() {
     falling = nullptr;
     state = TetrisState::LANDED;
     CheckLines();
+
+    if (state != TetrisState::LOSE)
+        NextTetromino();
 }
+
 
 void TetrisController::CheckLines() {
     for (int i = 0; i < board.size(); i++) {
         if (std::any_of(board[i].begin(), board[i].end(),
-                        [](Tile t){return t == Tile::NONE;}))
+                        [](Tile &t){return t == Tile::NONE;}))
             continue;
         ClearLine(i);
         i--;
+    }
+    for (int i = TILE_COUNT_V; i < board.size(); i++) {
+        if (std::any_of(board[i].begin(), board[i].end(),
+                        [](Tile &t){return t != Tile::NONE;})) {
+            state = TetrisState::LOSE;
+        }
     }
 }
 

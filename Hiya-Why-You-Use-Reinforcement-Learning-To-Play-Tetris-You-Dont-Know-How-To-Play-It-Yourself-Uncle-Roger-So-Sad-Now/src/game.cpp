@@ -103,12 +103,18 @@ void Game::handleKeyPress(int keycode) {
         tc->Move(true);
     else if (keycode == ALLEGRO_KEY_UP)
         tc->Rotate(false);
-    else if (keycode == ALLEGRO_KEY_DOWN)
+    else if (keycode == ALLEGRO_KEY_DOWN) {
         tc->Fall();
-    else if (keycode == ALLEGRO_KEY_SPACE)
+        al_reset_timer(fall);
+    }
+    else if (keycode == ALLEGRO_KEY_SPACE) {
         tc->HardFall();
-    else if (keycode == ALLEGRO_KEY_C)
+        al_reset_timer(fall);
+    }
+    else if (keycode == ALLEGRO_KEY_C) {
         tc->Hold();
+        al_reset_timer(fall);
+    }
     else if (keycode == ALLEGRO_KEY_Z)
         tc->Rotate(true);
 }
