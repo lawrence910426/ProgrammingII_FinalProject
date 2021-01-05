@@ -55,6 +55,11 @@ static const double DAS_INTERVAL_SECONDS = 0.06;
 
 static const int LANDING_REGRET_TIMES = 5;
 
+static const double CLEAR_LINE_ANIMATION_S1 = 0.05;
+static const double CLEAR_LINE_ANIMATION_S2 = 0.12;
+static const double CLEAR_LINE_ANIMATION_END = 0.3;
+static const double CLEAR_LINE_ANIMATION_ALPHA = 1.0;
+
 
 static ALLEGRO_COLOR BACKGROUND_COLOR;
 static ALLEGRO_COLOR TEXT_COLOR;

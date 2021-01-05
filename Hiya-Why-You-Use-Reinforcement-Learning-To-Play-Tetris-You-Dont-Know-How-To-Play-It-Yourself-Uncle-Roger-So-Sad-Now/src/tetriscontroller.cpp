@@ -2,14 +2,17 @@
 
 #include <allegro5/allegro_primitives.h>
 #include <random>
+#include <ranges>
 #include "log.h"
+
+#include "animations.h"
 
 bool TetrisController::textures_loaded = false;
 ALLEGRO_BITMAP *TetrisController::tetrimino_textures[9];
 ALLEGRO_BITMAP *TetrisController::hold_text;
 ALLEGRO_BITMAP *TetrisController::next_text;
 
-TetrisController::TetrisController(): state(TetrisState::LANDED), remaining_regret_times(LANDING_REGRET_TIMES) {
+TetrisController::TetrisController(ALLEGRO_TIMER *fall): state(TetrisState::LANDED), remaining_regret_times(LANDING_REGRET_TIMES), fall(fall) {
     for (int i = 0; i < TILE_COUNT_V + 5; i++)
         board.emplace_back(std::vector<Tile>(TILE_COUNT_H, Tile::NONE));
 
@@ -101,7 +104,8 @@ void TetrisController::Draw() {
         }
     }
 
-
+    if (clearing_line)
+        ClearLines();
 
 }
 
@@ -161,6 +165,7 @@ void TetrisController::Fall() {
     if (state != TetrisState::FALLING || falling == nullptr)
         return;
 
+    al_reset_timer(fall);
     falling->Fall();
 
     if (!falling->CanFall()) {
@@ -172,7 +177,7 @@ void TetrisController::Fall() {
 }
 
 void TetrisController::HardFall() {
-    if (state == TetrisState::FALLING) {
+    if (state == TetrisState::FALLING || state == TetrisState::LANDING) {
         falling->HardFall();
         Place();
     }
@@ -210,6 +215,7 @@ void TetrisController::NextTetromino() {
 
     last_hold = false;
     state = TetrisState::FALLING;
+    al_reset_timer(fall);
 }
 
 void TetrisController::Place() {
@@ -219,7 +225,7 @@ void TetrisController::Place() {
     state = TetrisState::LANDED;
     CheckLines();
 
-    if (state != TetrisState::LOSE)
+    if (!clearing_line && state != TetrisState::LOSE)
         NextTetromino();
 }
 
@@ -229,18 +235,60 @@ void TetrisController::CheckLines() {
         if (std::any_of(board[i].begin(), board[i].end(),
                         [](Tile &t){return t == Tile::NONE;}))
             continue;
-        ClearLine(i);
-        i--;
+        lines_to_clear.emplace_back(i);
     }
+
+    if (!lines_to_clear.empty())
+        ClearLines();
+    else
+        CheckDeath();
+}
+
+void TetrisController::ClearLines() {
+    static std::vector<ClearLineAnimation*> animations;
+    if (!clearing_line) { // Init
+        clearing_line = true;
+        animations.clear();
+        for (int y: lines_to_clear) {
+            board[y].assign(TILE_COUNT_H, Tile::NONE);
+            animations.emplace_back(new ClearLineAnimation(y));
+        }
+    }
+
+    bool finished = true;
+    for (auto &ani: animations) {
+        if (ani == nullptr)
+            continue;
+        finished = false;
+        if (ani->NextFrame()) {
+            delete ani;
+            ani = nullptr;
+        }
+    }
+
+    if (finished) {
+        for (int y: lines_to_clear | std::views::reverse) {
+            board.erase(board.begin() + y);
+            board.emplace_back(std::vector<Tile>(TILE_COUNT_H, Tile::NONE));
+        }
+
+        CheckDeath();
+
+        if (state != TetrisState::LOSE)
+            NextTetromino();
+
+        lines_to_clear.clear();
+        clearing_line = false;
+    }
+
+}
+
+void TetrisController::CheckDeath() {
     for (int i = TILE_COUNT_V; i < board.size(); i++) {
         if (std::any_of(board[i].begin(), board[i].end(),
                         [](Tile &t){return t != Tile::NONE;})) {
             state = TetrisState::LOSE;
+            return;
         }
     }
-}
-
-void TetrisController::ClearLine(int y) {
-    board.erase(board.begin() + y);
-    board.emplace_back(std::vector<Tile>(TILE_COUNT_H, Tile::NONE));
 }

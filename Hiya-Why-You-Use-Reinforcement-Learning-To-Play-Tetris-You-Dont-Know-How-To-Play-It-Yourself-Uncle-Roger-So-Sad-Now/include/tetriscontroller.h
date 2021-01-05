@@ -8,7 +8,7 @@ using namespace Constants;
 
 class TetrisController {
  public:
-    TetrisController();
+    explicit TetrisController(ALLEGRO_TIMER *fall);
 
     TetrisState Next();
 
@@ -25,7 +25,8 @@ class TetrisController {
     void NextTetromino();
 
     void CheckLines();
-    void ClearLine(int y);
+    void CheckDeath();
+    void ClearLines();
 
     static ALLEGRO_BITMAP *hold_text;
     static ALLEGRO_BITMAP *next_text;
@@ -43,8 +44,12 @@ class TetrisController {
     Tile hold = Tile::NONE;
     bool last_hold = false;
 
+    bool clearing_line = false;
+    int clear_frame = 0;
+    std::vector<int> lines_to_clear;
+
     static bool textures_loaded;
 
-
+    ALLEGRO_TIMER *fall;
     int remaining_regret_times;
 };

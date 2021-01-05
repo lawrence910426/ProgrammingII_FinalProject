@@ -34,7 +34,7 @@ Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
 
     }
 
-    tc = new TetrisController();
+    tc = new TetrisController(fall);
 }
 
 Game::~Game() {
@@ -104,18 +104,12 @@ void Game::handleKeyPress(int keycode) {
         tc->Move(true);
     else if (keycode == ALLEGRO_KEY_UP)
         tc->Rotate(false);
-    else if (keycode == ALLEGRO_KEY_DOWN) {
+    else if (keycode == ALLEGRO_KEY_DOWN)
         tc->Fall();
-        al_reset_timer(fall);
-    }
-    else if (keycode == ALLEGRO_KEY_SPACE) {
+    else if (keycode == ALLEGRO_KEY_SPACE)
         tc->HardFall();
-        al_reset_timer(fall);
-    }
-    else if (keycode == ALLEGRO_KEY_C) {
+    else if (keycode == ALLEGRO_KEY_C)
         tc->Hold();
-        al_reset_timer(fall);
-    }
     else if (keycode == ALLEGRO_KEY_Z)
         tc->Rotate(true);
 }
