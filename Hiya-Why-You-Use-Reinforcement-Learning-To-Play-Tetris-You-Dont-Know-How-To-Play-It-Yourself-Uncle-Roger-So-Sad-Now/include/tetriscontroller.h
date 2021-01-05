@@ -27,7 +27,11 @@ class TetrisController {
     void CheckLines();
     void ClearLine(int y);
 
+    static ALLEGRO_BITMAP *hold_text;
+    static ALLEGRO_BITMAP *next_text;
+
     static ALLEGRO_BITMAP *tetrimino_textures[9];
+
 
  private:
     Board board;
@@ -35,7 +39,7 @@ class TetrisController {
     TetrisState state;
 
     Tetromino *falling = nullptr;
-    std::queue<Tile> next_queue;
+    std::deque<Tile> next_queue;
     Tile hold = Tile::NONE;
     bool last_hold = false;
 

@@ -48,7 +48,7 @@ static const int PREVIEW_COUNT = 5;
 static const int PREVIEW_AREA_X = GAMEPLAY_X + GAMEPLAY_WIDTH + (2*BORDER_OUTER_WIDTH - (BORDER_OUTER_WIDTH - BORDER_INNER_WIDTH));
 static const int PREVIEW_AREA_Y = GAMEPLAY_Y;
 static const int PREVIEW_AREA_WIDTH = MINI_TILE_SIZE * PREVIEW_COUNT;
-static const int PREVIEW_AREA_HEIGHT = MINI_TILE_SIZE * 4 * PREVIEW_COUNT;
+static const int PREVIEW_AREA_HEIGHT = MINI_TILE_SIZE * 4 * PREVIEW_COUNT + MINI_TILE_SIZE;
 
 static const double DAS_HOLD_SECONDS = 0.2;
 static const double DAS_INTERVAL_SECONDS = 0.06;
@@ -57,10 +57,12 @@ static const int LANDING_REGRET_TIMES = 5;
 
 
 static ALLEGRO_COLOR BACKGROUND_COLOR;
+static ALLEGRO_COLOR TEXT_COLOR;
 static ALLEGRO_COLOR GAMEPLAY_BG_COLOR;
 static ALLEGRO_COLOR GIRD_COLOR;
 static ALLEGRO_COLOR BORDER_OUTER_COLOR;
 static ALLEGRO_COLOR BORDER_INNER_COLOR;
+
 
 
 static const int TETROMINO_BLOCK_TEXTURE_SIZE = 45;
@@ -73,6 +75,7 @@ static const double TETROMINO_BOARD_ALPHA = 0.75;
 
 inline void init_colors() {
     BACKGROUND_COLOR = al_map_rgb(210, 210, 210);
+    TEXT_COLOR = al_map_rgb(210, 210, 210);
     GAMEPLAY_BG_COLOR = al_map_rgb(57, 57, 57);
     GIRD_COLOR = al_map_rgb(47, 47, 47);
     BORDER_OUTER_COLOR = al_map_rgb(58, 219, 209);

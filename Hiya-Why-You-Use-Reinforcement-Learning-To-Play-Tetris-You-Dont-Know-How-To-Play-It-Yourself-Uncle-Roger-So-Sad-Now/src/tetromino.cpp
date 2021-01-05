@@ -3,10 +3,9 @@
 #include "tetriscontroller.h"
 
 #include <cstring>
-#include <algorithm>
 #include <allegro5/allegro_primitives.h>
 
-Tetromino::Tetromino(Tile t, Board &b) : type(t), board(b) {
+Tetromino::Tetromino(Tile t, Board &b): type(t), board(b), block() {
     memcpy(block, block_types[int(type)], sizeof(block));
     block_size = block_sizes[int(type)];
 
@@ -175,6 +174,6 @@ void Tetromino::HardFall() {
     y -= DistanceToGround();
 }
 
-bool Tetromino::Success() {
+bool Tetromino::Success() const {
     return creation_success;
 }

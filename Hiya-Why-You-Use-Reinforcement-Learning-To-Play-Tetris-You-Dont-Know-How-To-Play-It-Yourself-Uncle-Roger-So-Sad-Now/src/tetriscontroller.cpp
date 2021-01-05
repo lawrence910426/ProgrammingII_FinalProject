@@ -6,15 +6,15 @@
 
 bool TetrisController::textures_loaded = false;
 ALLEGRO_BITMAP *TetrisController::tetrimino_textures[9];
+ALLEGRO_BITMAP *TetrisController::hold_text;
+ALLEGRO_BITMAP *TetrisController::next_text;
 
-TetrisController::TetrisController() {
+TetrisController::TetrisController(): state(TetrisState::LANDED), remaining_regret_times(LANDING_REGRET_TIMES) {
     for (int i = 0; i < TILE_COUNT_V + 5; i++)
         board.emplace_back(std::vector<Tile>(TILE_COUNT_H, Tile::NONE));
 
     for (int i = 0; i < PREVIEW_COUNT; i++)
-        next_queue.emplace(Tile(randint(1, 7)));
-
-    state = TetrisState::LANDED;
+        next_queue.emplace_back(Tile(randint(1, 7)));
 
     if (!textures_loaded) {
         tetrimino_textures[int(Tile::RED)] = al_load_bitmap("../assets/block-red.png");
@@ -25,6 +25,10 @@ TetrisController::TetrisController() {
         tetrimino_textures[int(Tile::SKY)] = al_load_bitmap("../assets/block-sky.png");
         tetrimino_textures[int(Tile::PURPLE)] = al_load_bitmap("../assets/block-purple.png");
         tetrimino_textures[int(Tile::GRAY)] = al_load_bitmap("../assets/block-gray.png");
+
+        hold_text = al_load_bitmap("../assets/hold-text.png");
+        next_text = al_load_bitmap("../assets/next-text.png");
+
         textures_loaded = true;
     }
 }
@@ -32,6 +36,8 @@ TetrisController::TetrisController() {
 void TetrisController::Draw() {
     if (falling != nullptr)
         falling->Draw();
+
+    /// Board
     for (int i = 0; i < TILE_COUNT_V; i++) {
         for (int j = 0; j < TILE_COUNT_H; j++) {
             if (board[i][j] == Tile::NONE)
@@ -47,6 +53,56 @@ void TetrisController::Draw() {
                                          0);
         }
     }
+
+
+    /// Hold
+    al_draw_scaled_bitmap(hold_text, 0, 0,
+                          al_get_bitmap_width(hold_text), al_get_bitmap_height(hold_text),
+                          HOLDAREA_X + MINI_TILE_SIZE/2.0, HOLDAREA_Y,
+                          HOLDAREA_SIZE - MINI_TILE_SIZE, (HOLDAREA_SIZE - MINI_TILE_SIZE)/2.0,
+                          0);
+    if (hold != Tile::NONE) {
+        const int block_size = Tetromino::block_sizes[int(hold)];
+        const auto block = Tetromino::block_types[int(hold)];
+        for (int i = 0; i < block_size; i++) {
+            for (int j = 0; j < block_size; j++) {
+                if (block[i][j] != Tile::NONE) {
+                    al_draw_scaled_bitmap(tetrimino_textures[int(block[i][j])],
+                                          0, 0, TETROMINO_BLOCK_TEXTURE_SIZE, TETROMINO_BLOCK_TEXTURE_SIZE,
+                                          HOLDAREA_X + (HOLDAREA_SIZE - block_size * MINI_TILE_SIZE) / 2.0 + j * MINI_TILE_SIZE,
+                                          HOLDAREA_Y + MINI_TILE_SIZE + (HOLDAREA_SIZE - block_size * MINI_TILE_SIZE) / 2.0 + i * MINI_TILE_SIZE,
+                                          MINI_TILE_SIZE, MINI_TILE_SIZE,
+                                          0);
+                }
+            }
+        }
+    }
+
+    /// Next
+    al_draw_scaled_bitmap(next_text, 0, 0,
+                          al_get_bitmap_width(next_text), al_get_bitmap_height(next_text),
+                          PREVIEW_AREA_X + MINI_TILE_SIZE/2.0, PREVIEW_AREA_Y,
+                          PREVIEW_AREA_WIDTH - MINI_TILE_SIZE, (PREVIEW_AREA_WIDTH - MINI_TILE_SIZE)/2.0,
+                          0);
+    for (int p = 0; p < PREVIEW_COUNT; p++) {
+        const int block_size = Tetromino::block_sizes[int(next_queue[p])];
+        const auto block = Tetromino::block_types[int(next_queue[p])];
+        for (int i = 0; i < block_size; i++) {
+            for (int j = 0; j < block_size; j++) {
+                if (block[i][j] != Tile::NONE) {
+                    al_draw_scaled_bitmap(tetrimino_textures[int(block[i][j])],
+                                          0, 0, TETROMINO_BLOCK_TEXTURE_SIZE, TETROMINO_BLOCK_TEXTURE_SIZE,
+                                          PREVIEW_AREA_X + (PREVIEW_AREA_WIDTH - block_size * MINI_TILE_SIZE) / 2.0 + j * MINI_TILE_SIZE,
+                                          PREVIEW_AREA_Y + MINI_TILE_SIZE + (PREVIEW_AREA_WIDTH - block_size * MINI_TILE_SIZE) / 2.0 + i * MINI_TILE_SIZE + p * MINI_TILE_SIZE * 4,
+                                          MINI_TILE_SIZE, MINI_TILE_SIZE,
+                                          0);
+                }
+            }
+        }
+    }
+
+
+
 }
 
 bool TetrisController::Hold() {
@@ -141,8 +197,8 @@ TetrisState TetrisController::Next() {
 
 void TetrisController::NextTetromino() {
     Tile next = next_queue.front();
-    next_queue.pop();
-    next_queue.emplace(Tile(randint(1, 7)));
+    next_queue.pop_front();
+    next_queue.emplace_back(Tile(randint(1, 7)));
 
     falling = new Tetromino(next, board);
     if (!falling->Success()) {

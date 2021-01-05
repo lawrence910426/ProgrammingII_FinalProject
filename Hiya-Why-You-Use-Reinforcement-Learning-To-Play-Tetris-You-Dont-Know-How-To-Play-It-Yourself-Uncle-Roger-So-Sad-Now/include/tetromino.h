@@ -27,7 +27,7 @@ class Tetromino {
     void Fall();
     void HardFall();
 
-    bool Success();
+    bool Success() const;
 
 
     int x = -1, y = -1;

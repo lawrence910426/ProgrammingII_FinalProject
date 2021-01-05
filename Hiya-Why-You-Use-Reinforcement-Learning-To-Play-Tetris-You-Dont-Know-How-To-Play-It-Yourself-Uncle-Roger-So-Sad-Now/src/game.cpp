@@ -22,6 +22,7 @@ Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
 
     init_colors();
 
+
     al_register_event_source(eventQueue, al_get_display_event_source(display));
     al_register_event_source(eventQueue, al_get_timer_event_source(tick));
     al_register_event_source(eventQueue, al_get_timer_event_source(fall));
