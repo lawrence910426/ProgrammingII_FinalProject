@@ -107,6 +107,9 @@ void TetrisController::Draw() {
     if (clearing_line)
         ClearLines();
 
+    if (dying)
+        Dying();
+
 }
 
 bool TetrisController::Hold() {
@@ -288,7 +291,44 @@ void TetrisController::CheckDeath() {
         if (std::any_of(board[i].begin(), board[i].end(),
                         [](Tile &t){return t != Tile::NONE;})) {
             state = TetrisState::LOSE;
+            Dying();
             return;
         }
+    }
+}
+
+void TetrisController::Dying() {
+    static std::vector<ClearLineAnimation*> animations;
+    static int y;
+    static double last_time;
+
+    if (!dying) { // Init
+        dying = true;
+        animations.clear();
+        y = 0;
+        last_time = 0;
+    }
+
+    if (y < TILE_COUNT_V && al_get_time() - last_time >= DEATH_ANIMATION_INTERVAL) {
+        last_time = al_get_time();
+
+        board[y].assign(TILE_COUNT_H, Tile::NONE);
+        animations.push_back(new ClearLineAnimation(y));
+        y++;
+    }
+
+    bool finished = true;
+    for (auto &ani: animations) {
+        if (ani == nullptr)
+            continue;
+        finished = false;
+        if (ani->NextFrame()) {
+            delete ani;
+            ani = nullptr;
+        }
+    }
+
+    if (finished) {
+        dying = false;
     }
 }

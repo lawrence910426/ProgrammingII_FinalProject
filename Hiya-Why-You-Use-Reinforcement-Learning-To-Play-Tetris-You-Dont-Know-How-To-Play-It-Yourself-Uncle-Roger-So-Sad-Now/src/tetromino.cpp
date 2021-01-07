@@ -177,3 +177,4 @@ void Tetromino::HardFall() {
 bool Tetromino::Success() const {
     return creation_success;
 }
+

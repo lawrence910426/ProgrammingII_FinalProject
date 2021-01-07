@@ -28,6 +28,8 @@ class TetrisController {
     void CheckDeath();
     void ClearLines();
 
+    void Dying();
+
     static ALLEGRO_BITMAP *hold_text;
     static ALLEGRO_BITMAP *next_text;
 
@@ -45,8 +47,10 @@ class TetrisController {
     bool last_hold = false;
 
     bool clearing_line = false;
-    int clear_frame = 0;
     std::vector<int> lines_to_clear;
+
+    bool dying = false;
+
 
     static bool textures_loaded;
 

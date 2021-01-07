@@ -60,6 +60,7 @@ static const double CLEAR_LINE_ANIMATION_S2 = 0.12;
 static const double CLEAR_LINE_ANIMATION_END = 0.3;
 static const double CLEAR_LINE_ANIMATION_ALPHA = 1.0;
 
+static const double DEATH_ANIMATION_INTERVAL = 0.1;
 
 static ALLEGRO_COLOR BACKGROUND_COLOR;
 static ALLEGRO_COLOR TEXT_COLOR;
