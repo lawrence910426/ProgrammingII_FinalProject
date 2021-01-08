@@ -1,5 +1,4 @@
 #include "game.h"
-#include "server.h"
 
 using namespace Constants;
 
@@ -7,9 +6,22 @@ using namespace Constants;
 
 void *server_process(ALLEGRO_THREAD *t, void *arg) {
     auto *server = (Server *)arg;
-    while (server->running)
+    while (server->running) {
         server->handle();
+        usleep(20);
+    }
     delete server;
+
+    return nullptr;
+}
+
+void *client_process(ALLEGRO_THREAD *t, void *arg) {
+    auto *client = (Client *) arg;
+    while (client->running){
+        client->handle();
+        usleep(20);
+    }
+    delete client;
 
     return nullptr;
 }
@@ -40,10 +52,24 @@ Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
     al_register_event_source(eventQueue, al_get_keyboard_event_source());
 
     gameType = type;
+    is_multi = (type == GameType::MULTI_HOST || type == GameType::MULTI_CLIENT);
+
+
     if (type == GameType::MULTI_HOST) {
         server = new Server(SERVER_PORT, *this);
         ALLEGRO_THREAD *server_thread = al_create_thread(server_process, server);
         al_start_thread(server_thread);
+    }
+
+    if (is_multi) {
+        if (type == GameType::MULTI_HOST)
+            client = new Client(server->master_fd, *this);
+        else {
+            char host[] = "127.0.0.1";
+            client = new Client(host, 7122, *this);
+        }
+        ALLEGRO_THREAD *client_thread = al_create_thread(client_process, client);
+        al_start_thread(client_thread);
     }
 
     tc = new TetrisController(fall);
@@ -52,12 +78,22 @@ Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
 Game::~Game() {
     al_destroy_event_queue(eventQueue);
     delete tc;
+
+    if (client != nullptr)
+        client->Stop();
+
+    if (server != nullptr)
+        server->Stop();
 }
 
 GameResult Game::Start() {
     ALLEGRO_EVENT event;
     al_start_timer(fall);
     al_start_timer(das);
+
+    std::string name = "HelloYi";
+    if (is_multi)
+        client->SendRegister(name);
 
     // keycode -> holding, last_hold_time
     std::map<int, std::pair<bool, double>> das_map;
@@ -110,6 +146,16 @@ GameResult Game::Start() {
         } else {
             if (event.type == ALLEGRO_EVENT_TIMER)
                 updateScreen();
+
+            if (event.type == ALLEGRO_EVENT_KEY_DOWN) {
+                switch (event.keyboard.keycode) {
+                    case ALLEGRO_KEY_ENTER:
+                        if (gameType == GameType::MULTI_HOST)
+                            server->SendGameStart();
+                }
+            }
+
+
         }
     }
 }

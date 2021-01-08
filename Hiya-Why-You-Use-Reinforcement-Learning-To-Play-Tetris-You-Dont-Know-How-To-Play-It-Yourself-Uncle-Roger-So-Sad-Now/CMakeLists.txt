@@ -13,7 +13,8 @@ set(SOURCES
         src/tetriscontroller.cpp
         src/tetromino.cpp
         src/animations.cpp
-        src/server.cpp)
+        src/server.cpp
+        src/client.cpp)
 
 include_directories(include)
 

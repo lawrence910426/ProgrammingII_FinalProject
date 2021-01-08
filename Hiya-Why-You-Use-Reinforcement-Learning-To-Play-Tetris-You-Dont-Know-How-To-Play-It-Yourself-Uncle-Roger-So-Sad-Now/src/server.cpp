@@ -42,6 +42,10 @@ Server::~Server() {
     close(master_fd);
 }
 
+void Server::Stop() {
+    running = false;
+}
+
 void Server::handleNewConnection() {
     INFO("Handling new connection...")
     socklen_t addrlen = sizeof(addr);
@@ -61,10 +65,6 @@ void Server::disconnectClient(int fd) {
     FD_CLR(fd, &fds);
     INFO("Client " << fd << " disconnected!")
     players.erase(fd);
-    if (started)
-        SendPlayerDead(fd);
-    else
-        SendPlayers();
 }
 
 bool Server::recvFromClient(int fd) {
@@ -120,6 +120,10 @@ void Server::handle() {
                 if (!recvFromClient(*it)) {
                     // Client disconnected
                     it = client_fds.erase(it);
+                    if (started)
+                        SendPlayerDead(*it);
+                    else
+                        SendPlayers();
                     continue;
                 }
             }
@@ -129,21 +133,27 @@ void Server::handle() {
 }
 
 void Server::sendTo(int fd, char *msg) {
-    int msglen = strlen(msg);
-    int sent = 0;
-    while (sent < msglen) {
-        int bytes_sent = send(fd, msg + sent, msglen - sent, 0);
-        sent += bytes_sent;
+    INFO("Sending to " << fd)
+    if (fd == master_fd)
+        game.client->HandleMessage(msg);
+    else {
+        int msglen = strlen(msg);
+        int sent = 0;
+        while (sent < msglen) {
+            int bytes_sent = send(fd, msg + sent, msglen - sent, 0);
+            sent += bytes_sent;
+        }
     }
 }
 
 void Server::sendToAllOther(int source_fd, char *msg) {
     for (int fd: client_fds) {
+        INFO("Remaning FDs " << fd)
         if (fd != source_fd)
             sendTo(fd, msg);
     }
-//    if (source_fd != master_fd)
-//         game.client->HandleMessage(msg);
+    if (source_fd != master_fd)
+         game.client->HandleMessage(msg);
 }
 
 void Server::SendGameStart() {
@@ -190,6 +200,7 @@ void Server::SendUpdateBoard(int fd, char *board_encoding) {
 }
 
 void Server::SendPlayers() {
+    INFO("Sending players")
     bzero(message, sizeof(message));
     message[0] = char(HiyaOperation::PLAYERS);
     message[1] = char(players.size());

@@ -38,7 +38,7 @@ void Window::Start() {
         GameType selection = menu->Start();
         delete menu;
 
-        INFO("Game selected");
+        INFO("Game selected: " << int(selection));
         if (selection == GameType::EXIT)
             return;
 

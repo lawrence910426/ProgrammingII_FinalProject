@@ -7,6 +7,7 @@
 #include "client.h"
 
 class Server;
+class Client;
 
 #include <globals.h>
 #include <allegro5/allegro.h>
@@ -21,7 +22,9 @@ class Game {
     GameResult Start();
 
     Server *server = nullptr;
-//    Client *client = nullptr;
+    Client *client = nullptr;
+    GameStatus status = GameStatus::PENDING;
+
 
  private:
     static void drawBackground();
@@ -36,7 +39,7 @@ class Game {
     TetrisController *tc;
 
     GameType gameType;
-    GameStatus status = GameStatus::PENDING;
 
+    bool is_multi = false;
 
 };

@@ -37,6 +37,8 @@ GameType Menu::Start() {
                     return GameType::SINGLE;
                 else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE)
                     return GameType::MULTI_HOST;
+                else if (event.keyboard.keycode == ALLEGRO_KEY_RSHIFT)
+                    return GameType::MULTI_CLIENT;
                 break;
 
             case ALLEGRO_EVENT_TIMER:

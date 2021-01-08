@@ -27,6 +27,7 @@ class Server {
 
     void handle();
     bool running = true;
+    void Stop();
 
     void HandleMessage(int fd, char *msg);
 
@@ -60,7 +61,7 @@ class Server {
     bool recvFromClient(int fd);
     void disconnectClient(int fd);
 
-    static void sendTo(int fd, char *messageBuffer);
+    void sendTo(int fd, char *messageBuffer);
     void sendToAllOther(int source_fd, char *message);
 
     Game &game;
