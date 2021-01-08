@@ -68,6 +68,7 @@ static ALLEGRO_COLOR GAMEPLAY_BG_COLOR;
 static ALLEGRO_COLOR GIRD_COLOR;
 static ALLEGRO_COLOR BORDER_OUTER_COLOR;
 static ALLEGRO_COLOR BORDER_INNER_COLOR;
+static ALLEGRO_COLOR MULTI_BG_COLOR;
 
 
 
@@ -80,14 +81,14 @@ static const double TETROMINO_BOARD_ALPHA = 0.75;
 
 static const int SERVER_PORT = 7122;
 
-static const int MULTI_TILE_SIZE = 10;
+static const int MULTI_TILE_SIZE = 20;
 static const int MULTI_WIDTH = MULTI_TILE_SIZE * TILE_COUNT_H;
 static const int MULTI_HEIGHT = MULTI_TILE_SIZE * TILE_COUNT_V;
 
 static const int MULTI_X[] = {10, 20 + MULTI_WIDTH,
                               10, 20 + MULTI_WIDTH,
-                              WINDOW_WIDTH - 10 - MULTI_WIDTH, WINDOW_WIDTH - (10 - MULTI_WIDTH)*2,
-                              WINDOW_WIDTH - 10 - MULTI_WIDTH, WINDOW_WIDTH - (10 - MULTI_WIDTH)*2};
+                              WINDOW_WIDTH - (10 + MULTI_WIDTH)*2, WINDOW_WIDTH - (10 + MULTI_WIDTH),
+                              WINDOW_WIDTH - (10 + MULTI_WIDTH)*2, WINDOW_WIDTH - (10 + MULTI_WIDTH)};
 
 static const int MULTI_Y[] = {GAMEPLAY_Y, GAMEPLAY_Y,
                               GAMEPLAY_Y + GAMEPLAY_HEIGHT - MULTI_HEIGHT,  GAMEPLAY_Y + GAMEPLAY_HEIGHT - MULTI_HEIGHT,
@@ -103,6 +104,8 @@ inline void init_colors() {
     GIRD_COLOR = al_map_rgb(47, 47, 47);
     BORDER_OUTER_COLOR = al_map_rgb(58, 219, 209);
     BORDER_INNER_COLOR = al_map_rgb(36, 133, 122);
+
+    MULTI_BG_COLOR = al_map_rgba(57, 57, 57, 150);
 }
 
 }

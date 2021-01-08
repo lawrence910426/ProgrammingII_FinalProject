@@ -75,7 +75,7 @@ Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
         if (type == GameType::MULTI_HOST)
             client = new Client(server->master_fd, *this);
         else {
-            char host[] = "dorm.yikuo.dev";
+            char host[] = "127.0.0.1";
             client = new Client(host, 7122, *this);
         }
         //        ALLEGRO_THREAD *client_thread = al_create_thread(client_process, client);
@@ -288,7 +288,7 @@ void Game::drawMulti() const {
         auto &[player_name, player_board, player_alive] = players[fd];
         al_draw_filled_rectangle(MULTI_X[p], MULTI_Y[p],
                                  MULTI_X[p] + MULTI_WIDTH, MULTI_Y[p] + MULTI_HEIGHT,
-                                 al_map_rgba(20, 20, 20, 150));
+                                 MULTI_BG_COLOR);
 
         for (int i = 0; i < TILE_COUNT_V; i++) {
             for (int j = 0; j < TILE_COUNT_H; j++) {

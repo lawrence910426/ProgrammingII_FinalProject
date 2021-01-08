@@ -119,11 +119,11 @@ void Server::handle() {
                 // Client is active: receive data
                 if (!recvFromClient(*it)) {
                     // Client disconnected
-                    it = client_fds.erase(it);
                     if (started)
                         SendPlayerDead(*it);
                     else
                         SendPlayers();
+                    it = client_fds.erase(it);
                     continue;
                 }
             }
@@ -148,7 +148,6 @@ void Server::sendTo(int fd, char *msg) {
 
 void Server::sendToAllOther(int source_fd, char *msg) {
     for (int fd: client_fds) {
-        INFO("Remaning FDs " << fd)
         if (fd != source_fd)
             sendTo(fd, msg);
     }
@@ -168,6 +167,7 @@ void Server::ResponseRegister(int fd) {
     message[0] = char(HiyaOperation::REGISTER);
     message[1] = char(fd);
     sendTo(fd, message);
+    usleep(300);
     if (!started)
         SendPlayers();
 }
