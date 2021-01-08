@@ -78,6 +78,9 @@ static const double TETROMINO_GHOST_ALPHA = 0.3;
 static const double TETROMINO_BOARD_ALPHA = 0.75;
 
 
+static const int SERVER_PORT = 7122;
+
+static const int BUFFER_SIZE = 5000;
 
 inline void init_colors() {
     BACKGROUND_COLOR = al_map_rgb(210, 210, 210);
@@ -105,10 +108,8 @@ inline void al_reset_timer(ALLEGRO_TIMER  *timer) {
 }
 
 enum class GameStatus {
-  MENU, CONNECTING, LOADING, PLAYING, ENDING, EXIT
+  MENU, PENDING, PLAYING, DEAD
 };
-
-extern GameStatus gameStatus;
 
 enum class GameType {
     SINGLE, MULTI_HOST, MULTI_CLIENT, EXIT
@@ -132,6 +133,10 @@ enum class Tile {
     SKY, // I Block
     PURPLE, // T Block
     GRAY // Garbage Blocks
+};
+
+enum class HiyaOperation {
+    REGISTER = 1, PLAYERS, START, UPDATE_BOARD, ATTACK, DEATH
 };
 
 struct Position {

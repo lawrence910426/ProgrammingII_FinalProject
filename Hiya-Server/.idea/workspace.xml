@@ -12,24 +12,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ad02d461-1242-49ba-be5e-e6e5af7990f1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.clang-format" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/include/log.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/include/server.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/server.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/include/client.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/include/server.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/src/client.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/src/server.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/server.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/server.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/include/game.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/include/game.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/include/globals.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/include/globals.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/include/tetriscontroller.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/include/tetriscontroller.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/src/tetriscontroller.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/src/tetriscontroller.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/src/tetromino.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/src/tetromino.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/src/game.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/src/game.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/src/menu.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/src/menu.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/src/window.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../Hiya-Why-You-Use-Reinforcement-Learning-To-Play-Tetris-You-Dont-Know-How-To-Play-It-Yourself-Uncle-Roger-So-Sad-Now/src/window.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +88,7 @@
       <option name="presentableId" value="Default" />
       <updated>1609918350475</updated>
       <workItem from="1609918352056" duration="1961000" />
-      <workItem from="1609920429772" duration="14554000" />
+      <workItem from="1609920429772" duration="20242000" />
     </task>
     <servers />
   </component>

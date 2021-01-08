@@ -23,6 +23,7 @@ class Server
     ~Server();
 
     void handle();
+    bool running = true;
 
  private:
 

@@ -4,7 +4,6 @@ using namespace Constants;
 
 #include <allegro5/allegro_image.h>
 
-GameStatus gameStatus;
 
 Window::Window() {
     if (!al_init())
@@ -36,7 +35,6 @@ void Window::Start() {
     al_start_timer(tick);
     for (;;) {
         auto *menu = new Menu(display, tick);
-        gameStatus = GameStatus::MENU;
         GameType selection = menu->Start();
         delete menu;
 

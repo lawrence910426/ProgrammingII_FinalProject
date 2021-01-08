@@ -1,8 +1,18 @@
 #include "game.h"
+#include "server.h"
 
 using namespace Constants;
 
 #include <map>
+
+void *server_process(ALLEGRO_THREAD *t, void *arg) {
+    auto *server = (Server *)arg;
+    while (server->running)
+        server->handle();
+    delete server;
+
+    return nullptr;
+}
 
 Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
     eventQueue = al_create_event_queue();
@@ -30,8 +40,10 @@ Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
     al_register_event_source(eventQueue, al_get_keyboard_event_source());
 
     gameType = type;
-    if (type == GameType::SINGLE) {
-
+    if (type == GameType::MULTI_HOST) {
+        server = new Server(SERVER_PORT, *this);
+        ALLEGRO_THREAD *server_thread = al_create_thread(server_process, server);
+        al_start_thread(server_thread);
     }
 
     tc = new TetrisController(fall);
@@ -53,46 +65,51 @@ GameResult Game::Start() {
     for (;;) {
         al_wait_for_event(eventQueue, &event);
 
-        switch (event.type) {
-            case ALLEGRO_EVENT_DISPLAY_CLOSE:
-                return GameResult::EXIT;
+        if (status == GameStatus::PLAYING) {
+            switch (event.type) {
+                case ALLEGRO_EVENT_DISPLAY_CLOSE:
+                    return GameResult::EXIT;
 
-            case ALLEGRO_EVENT_KEY_DOWN:
-                handleKeyPress(event.keyboard.keycode);
+                case ALLEGRO_EVENT_KEY_DOWN:
+                    handleKeyPress(event.keyboard.keycode);
 
-                switch (event.keyboard.keycode) {
-                    case ALLEGRO_KEY_LEFT:
-                    case ALLEGRO_KEY_RIGHT:
-                    case ALLEGRO_KEY_DOWN:
-                        das_map[event.keyboard.keycode] = {true, al_get_time()};
-                }
-                break;
+                    switch (event.keyboard.keycode) {
+                        case ALLEGRO_KEY_LEFT:
+                        case ALLEGRO_KEY_RIGHT:
+                        case ALLEGRO_KEY_DOWN:
+                            das_map[event.keyboard.keycode] = {true, al_get_time()};
+                    }
+                    break;
 
-            case ALLEGRO_EVENT_KEY_UP:
-                switch (event.keyboard.keycode) {
-                    case ALLEGRO_KEY_LEFT:
-                    case ALLEGRO_KEY_RIGHT:
-                    case ALLEGRO_KEY_DOWN:
-                        das_map[event.keyboard.keycode].first = false;
-                }
-                break;
+                case ALLEGRO_EVENT_KEY_UP:
+                    switch (event.keyboard.keycode) {
+                        case ALLEGRO_KEY_LEFT:
+                        case ALLEGRO_KEY_RIGHT:
+                        case ALLEGRO_KEY_DOWN:
+                            das_map[event.keyboard.keycode].first = false;
+                    }
+                    break;
 
-            case ALLEGRO_EVENT_TIMER:
-                if (event.timer.source == fall) {
-                    tc->Next();
-                } else if (event.timer.source == das) {
-                    for (auto& [keycode, val]: das_map) {
-                        auto &[holding, last_hold_time] = val;
-                        if (holding) {
-                            if (al_get_time() - last_hold_time >= DAS_HOLD_SECONDS) {
-                                handleKeyPress(keycode);
+                case ALLEGRO_EVENT_TIMER:
+                    if (event.timer.source == fall) {
+                        tc->Next();
+                    } else if (event.timer.source == das) {
+                        for (auto& [keycode, val]: das_map) {
+                            auto &[holding, last_hold_time] = val;
+                            if (holding) {
+                                if (al_get_time() - last_hold_time >= DAS_HOLD_SECONDS) {
+                                    handleKeyPress(keycode);
+                                }
                             }
                         }
+                    } else { // tick
+                        updateScreen();
                     }
-                } else { // tick
-                    updateScreen();
-                }
-                break;
+                    break;
+            }
+        } else {
+            if (event.type == ALLEGRO_EVENT_TIMER)
+                updateScreen();
         }
     }
 }

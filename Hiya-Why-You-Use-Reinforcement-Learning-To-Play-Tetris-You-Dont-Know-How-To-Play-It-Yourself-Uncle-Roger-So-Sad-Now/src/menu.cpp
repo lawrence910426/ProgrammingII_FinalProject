@@ -35,6 +35,9 @@ GameType Menu::Start() {
             case ALLEGRO_EVENT_KEY_DOWN:
                 if (event.keyboard.keycode == ALLEGRO_KEY_ENTER)
                     return GameType::SINGLE;
+                else if (event.keyboard.keycode == ALLEGRO_KEY_SPACE)
+                    return GameType::MULTI_HOST;
+                break;
 
             case ALLEGRO_EVENT_TIMER:
                 if (event.timer.count >= FPS * 10)
