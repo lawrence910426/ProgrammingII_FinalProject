@@ -35,6 +35,7 @@ class Game {
 
  private:
     static void drawBackground();
+    void drawMulti() const;
     void updateScreen();
 
     void handleKeyPress(int keycode);

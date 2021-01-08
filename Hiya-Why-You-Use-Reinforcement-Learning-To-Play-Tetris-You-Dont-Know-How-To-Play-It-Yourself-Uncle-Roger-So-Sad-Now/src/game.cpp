@@ -75,7 +75,7 @@ Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
         if (type == GameType::MULTI_HOST)
             client = new Client(server->master_fd, *this);
         else {
-            char host[] = "127.0.0.1";
+            char host[] = "dorm.yikuo.dev";
             client = new Client(host, 7122, *this);
         }
         //        ALLEGRO_THREAD *client_thread = al_create_thread(client_process, client);
@@ -192,6 +192,8 @@ void Game::updateScreen() {
     drawBackground();
     if (status == GameStatus::PLAYING)
         tc->Draw();
+    if (is_multi && client->id != -1)
+        drawMulti();
 
     al_flip_display();
 }
@@ -274,5 +276,37 @@ void Game::drawBackground() {
                               PREVIEW_AREA_X + PREVIEW_AREA_WIDTH + BORDER_INNER_WIDTH / 2.0, PREVIEW_AREA_Y + PREVIEW_AREA_HEIGHT + BORDER_INNER_WIDTH / 2.0,
                               BORDER_INNER_WIDTH / 2.0, BORDER_INNER_WIDTH / 2.0,
                               BORDER_INNER_COLOR, BORDER_INNER_WIDTH);
+
 }
 
+void Game::drawMulti() const {
+    auto &players = client->players;
+    auto &player_list = client->player_list;
+
+    for (int p = 0; p < player_list.size(); p++) {
+        const int fd = player_list[p];
+        auto &[player_name, player_board, player_alive] = players[fd];
+        al_draw_filled_rectangle(MULTI_X[p], MULTI_Y[p],
+                                 MULTI_X[p] + MULTI_WIDTH, MULTI_Y[p] + MULTI_HEIGHT,
+                                 al_map_rgba(20, 20, 20, 150));
+
+        for (int i = 0; i < TILE_COUNT_V; i++) {
+            for (int j = 0; j < TILE_COUNT_H; j++) {
+                if (player_board[i][j] == Tile::NONE)
+                    continue;
+                al_draw_tinted_scaled_bitmap(TetrisController::tetrimino_textures[int(player_board[i][j])],
+                                             al_map_rgba_f(TETROMINO_BOARD_ALPHA, TETROMINO_BOARD_ALPHA, TETROMINO_BOARD_ALPHA, TETROMINO_BOARD_ALPHA),
+                                             0, 0, TETROMINO_BLOCK_TEXTURE_SIZE, TETROMINO_BLOCK_TEXTURE_SIZE,
+                                             MULTI_X[p] + MULTI_TILE_SIZE * j, MULTI_Y[p] + MULTI_TILE_SIZE * (TILE_COUNT_V - i - 1),
+                                             MULTI_TILE_SIZE, MULTI_TILE_SIZE,
+                                             0);
+            }
+        }
+
+        if (!player_alive) {
+            al_draw_filled_rectangle(MULTI_X[p], MULTI_Y[p],
+                                     MULTI_X[p] + MULTI_WIDTH, MULTI_Y[p] + MULTI_HEIGHT,
+                                     al_map_rgba(20, 20, 20, 150));
+        }
+    }
+}

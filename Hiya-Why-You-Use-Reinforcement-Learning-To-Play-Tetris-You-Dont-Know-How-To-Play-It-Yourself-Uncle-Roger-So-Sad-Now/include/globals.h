@@ -80,6 +80,20 @@ static const double TETROMINO_BOARD_ALPHA = 0.75;
 
 static const int SERVER_PORT = 7122;
 
+static const int MULTI_TILE_SIZE = 10;
+static const int MULTI_WIDTH = MULTI_TILE_SIZE * TILE_COUNT_H;
+static const int MULTI_HEIGHT = MULTI_TILE_SIZE * TILE_COUNT_V;
+
+static const int MULTI_X[] = {10, 20 + MULTI_WIDTH,
+                              10, 20 + MULTI_WIDTH,
+                              WINDOW_WIDTH - 10 - MULTI_WIDTH, WINDOW_WIDTH - (10 - MULTI_WIDTH)*2,
+                              WINDOW_WIDTH - 10 - MULTI_WIDTH, WINDOW_WIDTH - (10 - MULTI_WIDTH)*2};
+
+static const int MULTI_Y[] = {GAMEPLAY_Y, GAMEPLAY_Y,
+                              GAMEPLAY_Y + GAMEPLAY_HEIGHT - MULTI_HEIGHT,  GAMEPLAY_Y + GAMEPLAY_HEIGHT - MULTI_HEIGHT,
+                              GAMEPLAY_Y, GAMEPLAY_Y,
+                              GAMEPLAY_Y + GAMEPLAY_HEIGHT - MULTI_HEIGHT,  GAMEPLAY_Y + GAMEPLAY_HEIGHT - MULTI_HEIGHT};
+
 static const int BUFFER_SIZE = 5000;
 
 inline void init_colors() {

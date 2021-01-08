@@ -47,6 +47,7 @@ class Client {
     bool is_master;
 
     std::map<int, std::tuple<std::string, Board, bool>> players;
+    std::vector<int> player_list;
 
 
  private:

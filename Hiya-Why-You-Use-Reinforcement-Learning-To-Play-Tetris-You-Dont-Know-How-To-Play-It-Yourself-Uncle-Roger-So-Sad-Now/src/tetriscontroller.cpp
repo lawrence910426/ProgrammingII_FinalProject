@@ -226,6 +226,9 @@ void TetrisController::Place() {
     delete falling;
     falling = nullptr;
     state = TetrisState::LANDED;
+    if (game.is_multi) {
+        game.client->SendUpdateBoard(board);
+    }
     CheckLines();
 
     if (!clearing_line && state != TetrisState::LOSE)

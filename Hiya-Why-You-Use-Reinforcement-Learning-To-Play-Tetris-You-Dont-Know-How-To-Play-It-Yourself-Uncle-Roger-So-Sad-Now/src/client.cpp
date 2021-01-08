@@ -127,6 +127,7 @@ void Client::HandleMessage(char *msg) {
     } else if (op == HiyaOperation::PLAYERS) {
         const int cnt = int(msg[1]);
         int i = 2;
+        player_list.clear();
         for (int k = 0; k < cnt; k++) {
             const int fd = int(msg[i++]);
             const int len = int(msg[i++]);
@@ -143,6 +144,9 @@ void Client::HandleMessage(char *msg) {
                                            std::make_tuple(std::string(name), player_board, true)));
 
             INFO("Current Players: " << name);
+
+            if (fd != id)
+                player_list.emplace_back(fd);
         }
     } else if (op == HiyaOperation::START) {
         game.StartGame();
