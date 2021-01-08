@@ -1,6 +1,8 @@
 #pragma once
 
+#include <allegro5/allegro5.h>
 #include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include <queue>
 #include <vector>
 #include <random>
@@ -70,6 +72,8 @@ static ALLEGRO_COLOR BORDER_OUTER_COLOR;
 static ALLEGRO_COLOR BORDER_INNER_COLOR;
 static ALLEGRO_COLOR MULTI_BG_COLOR;
 
+static ALLEGRO_FONT *tech_font;
+
 
 
 static const int TETROMINO_BLOCK_TEXTURE_SIZE = 45;
@@ -106,6 +110,7 @@ inline void init_colors() {
     BORDER_INNER_COLOR = al_map_rgb(36, 133, 122);
 
     MULTI_BG_COLOR = al_map_rgba(57, 57, 57, 150);
+
 }
 
 }
@@ -125,7 +130,7 @@ inline void al_reset_timer(ALLEGRO_TIMER  *timer) {
 }
 
 enum class GameStatus {
-  MENU, PENDING, PLAYING, DEAD
+  PENDING, PLAYING, DEAD
 };
 
 enum class GameType {

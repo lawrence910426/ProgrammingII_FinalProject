@@ -36,6 +36,7 @@ class Game {
  private:
     static void drawBackground();
     void drawMulti() const;
+    void drawTexts() const;
     void updateScreen();
 
     void handleKeyPress(int keycode);
@@ -48,6 +49,8 @@ class Game {
 
     GameType gameType;
 
+
+    static bool textures_loaded;
 
     std::thread server_thread;
     std::thread client_thread;

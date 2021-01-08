@@ -1,5 +1,6 @@
 #include "menu.h"
 #include "log.h"
+#include "window.h"
 
 
 
@@ -9,6 +10,9 @@ using namespace Constants;
 
 bool Menu::init = false;
 
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
+
 Menu::Menu(ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
     eventQueue = al_create_event_queue();
     if (!eventQueue)
@@ -17,6 +21,13 @@ Menu::Menu(ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
     al_register_event_source(eventQueue, al_get_display_event_source(display));
     al_register_event_source(eventQueue, al_get_timer_event_source(tick));
     al_register_event_source(eventQueue, al_get_keyboard_event_source());
+
+    al_draw_text(Window::TechFont35, al_map_rgb(200, 200, 200),
+                 GAMEPLAY_X + GAMEPLAY_WIDTH/2.0, GAMEPLAY_Y + GAMEPLAY_HEIGHT/2.0,
+                 ALLEGRO_ALIGN_CENTER, "Press ENTER to start game");
+    INFO("Drawn text")
+    al_flip_display();
+
 }
 
 Menu::~Menu() {

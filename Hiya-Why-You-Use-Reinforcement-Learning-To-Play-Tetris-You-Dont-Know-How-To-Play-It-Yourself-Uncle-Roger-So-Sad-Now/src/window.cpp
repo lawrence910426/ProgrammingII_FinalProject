@@ -3,7 +3,10 @@
 using namespace Constants;
 
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 
+ALLEGRO_FONT *Window::TechFont35;
 
 Window::Window() {
     if (!al_init())
@@ -22,7 +25,16 @@ Window::Window() {
     if(!al_init_image_addon())
         FATAL("Image addon init failed!");
 
+    if (!al_init_font_addon())
+        FATAL("Font addon init failed!")
+
+    if (!al_init_ttf_addon())
+        FATAL("Font addon init failed!")
+
     init_colors();
+
+    TechFont35 = al_load_ttf_font("../assets/techno_hideo.ttf", 35, 0);
+
 }
 
 Window::~Window() {

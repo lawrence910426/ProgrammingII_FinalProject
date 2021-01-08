@@ -16,6 +16,8 @@ class Window {
 
     void Start();
 
+    static ALLEGRO_FONT *TechFont35;
+
  private:
     ALLEGRO_DISPLAY *display;
     ALLEGRO_TIMER *tick;

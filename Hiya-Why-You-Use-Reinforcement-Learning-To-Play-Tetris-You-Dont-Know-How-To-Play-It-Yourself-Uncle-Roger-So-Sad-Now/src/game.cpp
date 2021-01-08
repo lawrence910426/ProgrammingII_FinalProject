@@ -4,6 +4,9 @@ using namespace Constants;
 
 #include <map>
 #include <thread>
+#include "window.h"
+
+bool Game::textures_loaded = false;
 
 void server_process(Server *server) {
     while (server && server->running)
@@ -84,6 +87,7 @@ Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
     }
 
     tc = new TetrisController(fall, *this);
+
 }
 
 Game::~Game() {
@@ -178,6 +182,8 @@ void Game::handleKeyPress(int keycode) {
         if (keycode == ALLEGRO_KEY_ENTER) {
             if (gameType == GameType::MULTI_HOST)
                 server->SendGameStart();
+            else if (gameType == GameType::SINGLE)
+                StartGame();
         }
     }
 }
@@ -192,8 +198,11 @@ void Game::updateScreen() {
     drawBackground();
     if (status == GameStatus::PLAYING)
         tc->Draw();
+
     if (is_multi && client->id != -1)
         drawMulti();
+
+    drawTexts();
 
     al_flip_display();
 }
@@ -309,4 +318,16 @@ void Game::drawMulti() const {
                                      al_map_rgba(20, 20, 20, 150));
         }
     }
+}
+
+void Game::drawTexts() const {
+    if (status == GameStatus::PENDING) {
+        if (gameType == GameType::MULTI_HOST || gameType == GameType::SINGLE) {
+            al_draw_multiline_text(Window::TechFont35, TEXT_COLOR,
+                                   GAMEPLAY_X + GAMEPLAY_WIDTH/2.0, GAMEPLAY_Y + GAMEPLAY_HEIGHT/2.0,
+                                   GAMEPLAY_WIDTH, 40,
+                                   ALLEGRO_ALIGN_CENTER, "Press ENTER to start game");
+        }
+    }
+
 }
