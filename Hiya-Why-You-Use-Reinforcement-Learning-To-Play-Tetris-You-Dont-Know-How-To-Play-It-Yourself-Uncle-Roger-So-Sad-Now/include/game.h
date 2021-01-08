@@ -9,7 +9,10 @@
 class Server;
 class Client;
 
-#include <globals.h>
+class TetrisController;
+
+#include <thread>
+#include "globals.h"
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
@@ -21,9 +24,13 @@ class Game {
 
     GameResult Start();
 
+    void StartGame();
+
     Server *server = nullptr;
     Client *client = nullptr;
     GameStatus status = GameStatus::PENDING;
+    bool is_multi = false;
+
 
 
  private:
@@ -40,6 +47,8 @@ class Game {
 
     GameType gameType;
 
-    bool is_multi = false;
+
+    std::thread server_thread;
+    std::thread client_thread;
 
 };

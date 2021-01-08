@@ -39,4 +39,5 @@ target_link_libraries( ${PROJECT_NAME}
         allegro
         allegro_ttf
         allegro_video
+        pthread
 )

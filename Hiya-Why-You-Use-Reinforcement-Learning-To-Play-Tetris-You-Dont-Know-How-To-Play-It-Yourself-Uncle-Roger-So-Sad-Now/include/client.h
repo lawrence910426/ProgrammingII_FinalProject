@@ -35,7 +35,7 @@ class Client {
     void HandleMessage(char *msg);
 
     void SendRegister(std::string &name);
-    void SendUpdateBoard(char *board_encoding);
+    void SendUpdateBoard(Board &board);
     void SendAttack(int target, int lines);
     void SendDead();
 
@@ -46,7 +46,8 @@ class Client {
     int sock{};
     bool is_master;
 
-    std::map<int, std::string> players;
+    std::map<int, std::tuple<std::string, Board, bool>> players;
+
 
  private:
     std::set<int> client_fds;

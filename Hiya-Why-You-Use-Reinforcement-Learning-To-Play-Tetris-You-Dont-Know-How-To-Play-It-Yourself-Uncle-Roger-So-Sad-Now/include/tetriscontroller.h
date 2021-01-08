@@ -5,10 +5,13 @@ using namespace Constants;
 
 #include "tetromino.h"
 
+#include "game.h"
+
+class Game;
 
 class TetrisController {
  public:
-    explicit TetrisController(ALLEGRO_TIMER *fall);
+    TetrisController(ALLEGRO_TIMER *fall, Game &game);
 
     TetrisState Next();
 
@@ -56,4 +59,6 @@ class TetrisController {
 
     ALLEGRO_TIMER *fall;
     int remaining_regret_times;
+
+    Game &game;
 };

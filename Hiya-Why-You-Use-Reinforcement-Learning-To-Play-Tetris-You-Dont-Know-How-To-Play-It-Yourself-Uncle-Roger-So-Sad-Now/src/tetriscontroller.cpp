@@ -12,7 +12,7 @@ ALLEGRO_BITMAP *TetrisController::tetrimino_textures[9];
 ALLEGRO_BITMAP *TetrisController::hold_text;
 ALLEGRO_BITMAP *TetrisController::next_text;
 
-TetrisController::TetrisController(ALLEGRO_TIMER *fall): state(TetrisState::LANDED), remaining_regret_times(LANDING_REGRET_TIMES), fall(fall) {
+TetrisController::TetrisController(ALLEGRO_TIMER *fall, Game &game): state(TetrisState::LANDED), remaining_regret_times(LANDING_REGRET_TIMES), fall(fall), game(game) {
     for (int i = 0; i < TILE_COUNT_V + 5; i++)
         board.emplace_back(std::vector<Tile>(TILE_COUNT_H, Tile::NONE));
 
@@ -330,5 +330,7 @@ void TetrisController::Dying() {
 
     if (finished) {
         dying = false;
+        if (game.is_multi)
+            game.client->SendDead();
     }
 }

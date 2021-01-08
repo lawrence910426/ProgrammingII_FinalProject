@@ -104,12 +104,17 @@ void Client::SendDead() {
     sendToServer(message);
 }
 
-void Client::SendUpdateBoard(char *board_encoding) {
-//    INFO("Sending updated board")
-//    bzero(message, sizeof(message));
-//    message[0] = char(HiyaOperation::UPDATE_BOARD);
-//    strncpy(message + 1, board_encoding, TILE_COUNT_H * TILE_COUNT_V);
-//    sendToServer(fd, message);
+void Client::SendUpdateBoard(Board &board) {
+    INFO("Sending updated board")
+    bzero(message, sizeof(message));
+    message[0] = char(HiyaOperation::UPDATE_BOARD);
+    int p = 1;
+    for (int i = 0; i < TILE_COUNT_V; i++) {
+        for (int j = 0; j < TILE_COUNT_H; j++) {
+            message[p++] = char(int(board[i][j]) + 1);
+        }
+    }
+    sendToServer(message);
 }
 
 void Client::HandleMessage(char *msg) {
@@ -129,14 +134,38 @@ void Client::HandleMessage(char *msg) {
             strncpy(name, msg + i, len);
             i += len;
             name[len] = '\0';
-            players.emplace(std::make_pair(fd, std::string(name)));
+
+            Board player_board;
+            for (int i = 0; i < TILE_COUNT_V; i++)
+                player_board.emplace_back(std::vector<Tile>(TILE_COUNT_H, Tile::NONE));
+
+            players.emplace(std::make_pair(fd,
+                                           std::make_tuple(std::string(name), player_board, true)));
+
             INFO("Current Players: " << name);
         }
     } else if (op == HiyaOperation::START) {
-        game.status = GameStatus::PLAYING;
+        game.StartGame();
     } else if (op == HiyaOperation::UPDATE_BOARD) {
+        const int fd = int(msg[1]);
+        int p = 2;
+        auto &[player_name, player_board, player_alive] = players[fd];
+        for (int i = 0; i < TILE_COUNT_V; i++) {
+            for (int j = 0; j < TILE_COUNT_H; j++) {
+                player_board[i][j] = Tile(msg[p++] - 1);
+            }
+        }
     } else if (op == HiyaOperation::ATTACK) {
+        const int attacker = int(msg[1]);
+        const int target = int(msg[2]);
+        const int lines = int(msg[3]);
+        INFO("Player " << attacker << " attacked " << target << " with " << lines << " lines!")
+
     } else if (op == HiyaOperation::DEATH) {
+        const int fd = int(msg[1]);
+        INFO("Player " << fd << " Died!")
+        auto &[player_name, player_board, player_alive] = players[fd];
+        player_alive = false;
     } else {
         WARN("Operation " << int(op) << " not recognized")
     }
