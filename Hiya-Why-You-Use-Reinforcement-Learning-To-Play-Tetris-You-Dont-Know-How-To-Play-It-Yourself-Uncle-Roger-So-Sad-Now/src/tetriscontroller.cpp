@@ -8,7 +8,7 @@
 #include "animations.h"
 
 bool TetrisController::textures_loaded = false;
-ALLEGRO_BITMAP *TetrisController::tetrimino_textures[9];
+ALLEGRO_BITMAP *TetrisController::tetrimino_textures[10];
 ALLEGRO_BITMAP *TetrisController::hold_text;
 ALLEGRO_BITMAP *TetrisController::next_text;
 
@@ -28,6 +28,7 @@ TetrisController::TetrisController(ALLEGRO_TIMER *fall, Game &game): state(Tetri
         tetrimino_textures[int(Tile::SKY)] = al_load_bitmap("../assets/block-sky.png");
         tetrimino_textures[int(Tile::PURPLE)] = al_load_bitmap("../assets/block-purple.png");
         tetrimino_textures[int(Tile::GRAY)] = al_load_bitmap("../assets/block-gray.png");
+        tetrimino_textures[int(Tile::LAVA)] = al_load_bitmap("../assets/block-lava.png");
 
         hold_text = al_load_bitmap("../assets/hold-text.png");
         next_text = al_load_bitmap("../assets/next-text.png");
@@ -103,6 +104,40 @@ void TetrisController::Draw() {
             }
         }
     }
+
+    // Garbage
+    if (game.status == GameStatus::PLAYING && !dying) {
+        CheckGarbage();
+
+        int last = 0;
+        double cur_time = al_get_time();
+        for (const auto &[lines, time] : garbage_buffer) {
+            Tile garbage;
+            const double diff_sec = cur_time - time;
+            if (diff_sec < GARBAGE_BUFFER_S1_SEC)
+                garbage = Tile::GRAY;
+            else if (diff_sec < GARBAGE_BUFFER_S2_SEC)
+                garbage = Tile::YELLOW;
+            else if (diff_sec < GARBAGE_BUFFER_S3_SEC)
+                garbage = Tile::RED;
+            else {
+                if (fmod(diff_sec, GARBAGE_BUFFER_LAVA_FLASH_INTERVAL * 2) < GARBAGE_BUFFER_LAVA_FLASH_INTERVAL)
+                    garbage = Tile::RED;
+                else
+                    garbage = Tile::LAVA;
+            }
+
+            for (int i = 0; i < lines && last + i < GARBAGE_BUFFER_TILE_COUNT; i++) {
+                al_draw_scaled_bitmap(tetrimino_textures[int(garbage)],
+                                      0, 0, TETROMINO_BLOCK_TEXTURE_SIZE, TETROMINO_BLOCK_TEXTURE_SIZE,
+                                      GARBAGE_BUFFER_X, GARBAGE_BUFFER_Y + GARBAGE_BUFFER_HEIGHT - (last + i + 1) * TILE_SIZE,
+                                      TILE_SIZE, TILE_SIZE,
+                                      0);
+            }
+            last += lines;
+        }
+    }
+
 
     if (clearing_line)
         ClearLines();
@@ -225,7 +260,7 @@ void TetrisController::Place() {
     falling->Place();
     delete falling;
     falling = nullptr;
-    state = TetrisState::LANDED;
+//    state = TetrisState::LANDED;
     if (game.is_multi) {
         game.client->SendUpdateBoard(board);
     }
@@ -258,6 +293,11 @@ void TetrisController::ClearLines() {
         for (int y: lines_to_clear) {
             board[y].assign(TILE_COUNT_H, Tile::NONE);
             animations.emplace_back(new ClearLineAnimation(y));
+        }
+
+        if (game.is_multi && !game.client->player_list.empty()) {
+            const int target = game.client->player_list.at(randint(0, game.client->player_list.size() - 1));
+            game.client->SendAttack(target, lines_to_clear.size());
         }
     }
 
@@ -333,7 +373,37 @@ void TetrisController::Dying() {
 
     if (finished) {
         dying = false;
+//        garbage_buffer.clear();
         if (game.is_multi)
             game.client->SendDead();
+        game.status = GameStatus::END;
+    }
+}
+
+void TetrisController::ReceiveAttack(int lines) {
+    garbage_buffer.emplace_back(lines, al_get_time());
+}
+
+void TetrisController::CheckGarbage() {
+    if (clearing_line)
+        return;
+
+    double cur_time = al_get_time();
+    while (!garbage_buffer.empty()) {
+        auto [lines, time] = *garbage_buffer.begin();
+        if (cur_time - time >= GARBAGE_BUFFER_PUSH_SEC) {
+            const int hole = randint(0, TILE_COUNT_H - 1);
+            auto line = std::vector<Tile>(TILE_COUNT_H, Tile::GRAY);
+            line[hole] = Tile::NONE;
+            if (falling != nullptr)
+                falling->y += lines;
+
+            while (lines--)
+                board.emplace_front(line);
+
+            garbage_buffer.pop_front();
+        } else {
+            break;
+        }
     }
 }

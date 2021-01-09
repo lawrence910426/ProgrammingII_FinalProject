@@ -30,13 +30,16 @@ class TetrisController {
     void CheckLines();
     void CheckDeath();
     void ClearLines();
+    void CheckGarbage();
+
+    void ReceiveAttack(int lines);
 
     void Dying();
 
     static ALLEGRO_BITMAP *hold_text;
     static ALLEGRO_BITMAP *next_text;
 
-    static ALLEGRO_BITMAP *tetrimino_textures[9];
+    static ALLEGRO_BITMAP *tetrimino_textures[10];
 
 
  private:
@@ -48,6 +51,8 @@ class TetrisController {
     std::deque<Tile> next_queue;
     Tile hold = Tile::NONE;
     bool last_hold = false;
+
+    std::deque<std::pair<int, double>> garbage_buffer;
 
     bool clearing_line = false;
     std::vector<int> lines_to_clear;

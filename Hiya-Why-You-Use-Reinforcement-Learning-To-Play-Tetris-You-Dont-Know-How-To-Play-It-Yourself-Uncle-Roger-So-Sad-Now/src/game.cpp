@@ -78,7 +78,7 @@ Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
         if (type == GameType::MULTI_HOST)
             client = new Client(server->master_fd, *this);
         else {
-            char host[] = "127.0.0.1";
+            char host[] = "dorm.yikuo.dev";
             client = new Client(host, 7122, *this);
         }
         //        ALLEGRO_THREAD *client_thread = al_create_thread(client_process, client);
@@ -322,7 +322,12 @@ void Game::drawMulti() const {
 
 void Game::drawTexts() const {
     if (status == GameStatus::PENDING) {
-        if (gameType == GameType::MULTI_HOST || gameType == GameType::SINGLE) {
+        if (gameType == GameType::MULTI_CLIENT) {
+            al_draw_multiline_text(Window::AirStrike40, TEXT_COLOR,
+                                   GAMEPLAY_X + GAMEPLAY_WIDTH/2.0, GAMEPLAY_Y + GAMEPLAY_HEIGHT/2.0,
+                                   GAMEPLAY_WIDTH, 40,
+                                   ALLEGRO_ALIGN_CENTER, "Waiting host to start game");
+        } else {
             al_draw_multiline_text(Window::AirStrike40, TEXT_COLOR,
                                    GAMEPLAY_X + GAMEPLAY_WIDTH/2.0, GAMEPLAY_Y + GAMEPLAY_HEIGHT/2.0,
                                    GAMEPLAY_WIDTH, 40,
@@ -331,3 +336,9 @@ void Game::drawTexts() const {
     }
 
 }
+
+void Game::ReceiveAttack(int lines) {
+    if (status == GameStatus::PLAYING)
+        tc->ReceiveAttack(lines);
+}
+

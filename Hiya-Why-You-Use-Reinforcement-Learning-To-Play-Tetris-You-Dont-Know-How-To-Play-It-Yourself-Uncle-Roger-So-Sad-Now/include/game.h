@@ -31,7 +31,7 @@ class Game {
     GameStatus status = GameStatus::PENDING;
     bool is_multi = false;
 
-
+    void ReceiveAttack(int lines);
 
  private:
     static void drawBackground();

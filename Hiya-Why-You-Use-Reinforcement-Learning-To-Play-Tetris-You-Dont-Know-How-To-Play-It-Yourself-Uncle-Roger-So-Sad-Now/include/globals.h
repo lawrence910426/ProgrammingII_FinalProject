@@ -44,6 +44,11 @@ static const int GARBAGE_BUFFER_Y = GAMEPLAY_Y + HOLDAREA_SIZE + (2*BORDER_OUTER
 static const int GARBAGE_BUFFER_WIDTH = TILE_SIZE;
 static const int GARBAGE_BUFFER_HEIGHT = GAMEPLAY_HEIGHT - HOLDAREA_SIZE - (2*BORDER_OUTER_WIDTH - (BORDER_OUTER_WIDTH - BORDER_INNER_WIDTH));
 
+static const int GARBAGE_BUFFER_S1_SEC = 3;
+static const int GARBAGE_BUFFER_S2_SEC = 6;
+static const int GARBAGE_BUFFER_S3_SEC = 9;
+static const int GARBAGE_BUFFER_PUSH_SEC = 12;
+static const double GARBAGE_BUFFER_LAVA_FLASH_INTERVAL = 0.5;
 
 
 static const int PREVIEW_COUNT = 5;
@@ -130,7 +135,7 @@ inline void al_reset_timer(ALLEGRO_TIMER  *timer) {
 }
 
 enum class GameStatus {
-  PENDING, PLAYING, DEAD
+  PENDING, PLAYING, END
 };
 
 enum class GameType {
@@ -154,7 +159,8 @@ enum class Tile {
     BLUE, // J Block
     SKY, // I Block
     PURPLE, // T Block
-    GRAY // Garbage Blocks
+    GRAY, // Garbage Blocks
+    LAVA // Garbage buffer
 };
 
 enum class HiyaOperation {

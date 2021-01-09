@@ -165,6 +165,8 @@ void Client::HandleMessage(char *msg) {
         const int lines = int(msg[3]);
         INFO("Player " << attacker << " attacked " << target << " with " << lines << " lines!")
 
+        if (target == id && game.status == GameStatus::PLAYING)
+            game.ReceiveAttack(lines);
     } else if (op == HiyaOperation::DEATH) {
         const int fd = int(msg[1]);
         INFO("Player " << fd << " Died!")
