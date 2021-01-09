@@ -323,10 +323,10 @@ void Game::drawMulti() const {
 void Game::drawTexts() const {
     if (status == GameStatus::PENDING) {
         if (gameType == GameType::MULTI_HOST || gameType == GameType::SINGLE) {
-            al_draw_multiline_text(Window::TechFont35, TEXT_COLOR,
+            al_draw_multiline_text(Window::AirStrike40, TEXT_COLOR,
                                    GAMEPLAY_X + GAMEPLAY_WIDTH/2.0, GAMEPLAY_Y + GAMEPLAY_HEIGHT/2.0,
                                    GAMEPLAY_WIDTH, 40,
-                                   ALLEGRO_ALIGN_CENTER, "Press ENTER to start game");
+                                   ALLEGRO_ALIGN_CENTER, "Press ENTER to\nstart game");
         }
     }
 

@@ -17,6 +17,7 @@ class Window {
     void Start();
 
     static ALLEGRO_FONT *TechFont35;
+    static ALLEGRO_FONT *AirStrike40;
 
  private:
     ALLEGRO_DISPLAY *display;

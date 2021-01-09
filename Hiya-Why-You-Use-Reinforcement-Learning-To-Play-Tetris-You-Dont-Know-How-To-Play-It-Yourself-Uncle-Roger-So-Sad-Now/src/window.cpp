@@ -7,6 +7,7 @@ using namespace Constants;
 #include <allegro5/allegro_ttf.h>
 
 ALLEGRO_FONT *Window::TechFont35;
+ALLEGRO_FONT *Window::AirStrike40;
 
 Window::Window() {
     if (!al_init())
@@ -34,6 +35,7 @@ Window::Window() {
     init_colors();
 
     TechFont35 = al_load_ttf_font("../assets/techno_hideo.ttf", 35, 0);
+    AirStrike40 = al_load_ttf_font("../assets/airstrike.ttf", 40, 0);
 
 }
 
