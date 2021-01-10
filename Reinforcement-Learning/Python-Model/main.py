@@ -1,11 +1,202 @@
 from RL_Brain import RLBrain
 import tensorflow as tf
+import numpy as np
+from NN_Translate import NNTranslate
+from matplotlib import pyplot as mpl
+import time
+
+
+Tetromino = [
+    [
+        [[0, 0, 0, 0],
+         [1, 1, 1, 1],
+         [0, 0, 0, 0],
+         [0, 0, 0, 0]],
+
+        [[0, 0, 1, 0],
+         [0, 0, 1, 0],
+         [0, 0, 1, 0],
+         [0, 0, 1, 0]],
+
+        [[0, 0, 0, 0],
+         [0, 0, 0, 0],
+         [1, 1, 1, 1],
+         [0, 0, 0, 0]],
+
+        [[0, 1, 0, 0],
+         [0, 1, 0, 0],
+         [0, 1, 0, 0],
+         [0, 1, 0, 0]],
+    ],
+    [
+        [[1, 0, 0, 0],
+         [1, 1, 1, 0],
+         [0, 0, 0, 0],
+         [0, 0, 0, 0]],
+
+        [[0, 1, 1, 0],
+         [0, 1, 0, 0],
+         [0, 1, 0, 0],
+         [0, 0, 0, 0]],
+
+        [[0, 0, 0, 0],
+         [1, 1, 1, 0],
+         [0, 0, 1, 0],
+         [0, 0, 0, 0]],
+
+        [[0, 1, 0, 0],
+         [0, 1, 0, 0],
+         [1, 1, 0, 0],
+         [0, 0, 0, 0]],
+    ],
+    [
+        [[0, 0, 1, 0],
+         [1, 1, 1, 0],
+         [0, 0, 0, 0],
+         [0, 0, 0, 0]],
+
+        [[0, 1, 0, 0],
+         [0, 1, 0, 0],
+         [0, 1, 1, 0],
+         [0, 0, 0, 0]],
+
+        [[0, 0, 0, 0],
+         [1, 1, 1, 0],
+         [1, 0, 0, 0],
+         [0, 0, 0, 0]],
+
+        [[1, 1, 0, 0],
+         [0, 1, 0, 0],
+         [0, 1, 0, 0],
+         [0, 0, 0, 0]],
+    ],
+    [
+        [[0, 1, 1, 0],
+         [0, 1, 1, 0],
+         [0, 0, 0, 0],
+         [0, 0, 0, 0]],
+
+        [[0, 1, 1, 0],
+         [0, 1, 1, 0],
+         [0, 0, 0, 0],
+         [0, 0, 0, 0]],
+
+        [[0, 1, 1, 0],
+         [0, 1, 1, 0],
+         [0, 0, 0, 0],
+         [0, 0, 0, 0]],
+
+        [[0, 1, 1, 0],
+         [0, 1, 1, 0],
+         [0, 0, 0, 0],
+         [0, 0, 0, 0]],
+    ],
+    [
+        [[0, 1, 1, 0],
+         [1, 1, 0, 0],
+         [0, 0, 0, 0],
+         [0, 0, 0, 0]],
+
+        [[0, 1, 0, 0],
+         [0, 1, 1, 0],
+         [0, 0, 1, 0],
+         [0, 0, 0, 0]],
+
+        [[0, 0, 0, 0],
+         [0, 1, 1, 0],
+         [1, 1, 0, 0],
+         [0, 0, 0, 0]],
+
+        [[1, 0, 0, 0],
+         [1, 1, 0, 0],
+         [0, 1, 0, 0],
+         [0, 0, 0, 0]],
+    ],
+    [
+        [[0, 1, 0, 0],
+         [1, 1, 1, 0],
+         [0, 0, 0, 0],
+         [0, 0, 0, 0]],
+
+        [[0, 1, 0, 0],
+         [0, 1, 1, 0],
+         [0, 1, 0, 0],
+         [0, 0, 0, 0]],
+
+        [[0, 1, 0, 0],
+         [1, 1, 0, 0],
+         [0, 1, 0, 0],
+         [0, 0, 0, 0]],
+
+        [[1, 1, 1, 0],
+         [0, 1, 0, 0],
+         [0, 0, 0, 0],
+         [0, 0, 0, 0]],
+    ],
+    [
+        [[1, 1, 0, 0],
+         [0, 1, 1, 0],
+         [0, 0, 0, 0],
+         [0, 0, 0, 0]],
+
+        [[0, 0, 1, 0],
+         [0, 1, 1, 0],
+         [0, 1, 0, 0],
+         [0, 0, 0, 0]],
+
+        [[0, 0, 0, 0],
+         [1, 1, 0, 0],
+         [0, 1, 1, 0],
+         [0, 0, 0, 0]],
+
+        [[0, 1, 0, 0],
+         [1, 1, 0, 0],
+         [1, 0, 0, 0],
+         [0, 0, 0, 0]],
+    ]
+]
+
+for i in range(7):
+    for j in range(4):
+        Tetromino[i][j] = np.array(Tetromino[i][j], dtype=np.bool)
+
+
+def show(title, board):
+    mpl.matshow(board)
+    mpl.title(title)
+    mpl.show()
 
 
 def main():
     sess = tf.compat.v1.Session()
     brain = RLBrain(sess, 1)
-    brain.save()
+    for game in range(100):
+        board = np.zeros((20, 10), dtype=np.bool)
+        while True:
+            tetro = Tetromino[np.random.randint(0, 7)]
+            s = board, tetro
+            a = brain.get(s)
+            direction, offset = a // 10, a % 10
+
+            valid, bottom = NNTranslate.drop_tetro(tetro[direction], offset, board)
+            if not valid:
+                break
+
+            for x in range(4):
+                for y in range(4):
+                    if tetro[direction][x, y]:
+                        board[bottom + x, offset + y] = True
+            r = 0
+            for row in range(20):
+                if np.all(board[row, :]):
+                    r += 1
+                    board[1:row + 1, :] = board[0:row, :]
+                    board[0, :] = 0
+                    np.save(str(time.time()), board)
+            s_ = board, tetro
+            brain.add_observation(s, a, r, s_)
+            brain.learn()
+        brain.save()
 
 
 # Press the green button in the gutter to run the script.

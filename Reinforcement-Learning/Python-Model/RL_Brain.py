@@ -40,14 +40,14 @@ class RLBrain:
         w_init, b_init = tf.random_normal_initializer(0.0, 0.01), tf.constant_initializer(0.01)
 
         def hidden(previous):
-            previous = tf.compat.v1.layers.dense(previous, 30, tf.nn.leaky_relu, True,
+            previous = tf.compat.v1.layers.dense(previous, 10, tf.nn.leaky_relu, True,
                                                  kernel_initializer=w_init, bias_initializer=b_init)
-            previous = tf.compat.v1.layers.dense(previous, 40, tf.nn.leaky_relu, True,
-                                                 kernel_initializer=w_init, bias_initializer=b_init)
-            previous = tf.compat.v1.layers.dense(previous, 50, tf.nn.leaky_relu, True,
-                                                 kernel_initializer=w_init, bias_initializer=b_init)
-            previous = tf.compat.v1.layers.dense(previous, 30, tf.nn.leaky_relu, True,
-                                                 kernel_initializer=w_init, bias_initializer=b_init)
+            # previous = tf.compat.v1.layers.dense(previous, 40, tf.nn.leaky_relu, True,
+            #                                      kernel_initializer=w_init, bias_initializer=b_init)
+            # previous = tf.compat.v1.layers.dense(previous, 50, tf.nn.leaky_relu, True,
+            #                                      kernel_initializer=w_init, bias_initializer=b_init)
+            # previous = tf.compat.v1.layers.dense(previous, 30, tf.nn.leaky_relu, True,
+            #                                      kernel_initializer=w_init, bias_initializer=b_init)
             return previous
 
         with tf.compat.v1.variable_scope('eval_net_' + self.id):
@@ -90,7 +90,6 @@ class RLBrain:
         self.init = tf.compat.v1.global_variables()
 
     def get(self, status):
-        available = Brain.get_available(status)
         status_nn = NNTranslate.state_to_nn(status)[np.newaxis, :]
         if np.random.uniform() < self.eplison + self.learn_step * 1e-6:
             action_values = self.session.run(
@@ -101,19 +100,19 @@ class RLBrain:
         else:
             action_values = 1 / (1 + np.exp(-np.random.normal(size=self.actions)))
             action_values = action_values + 1
-        action_values = action_values * NNTranslate.get_available_mask(available)
+        action_values = action_values * NNTranslate.get_available_mask(status)
         action = np.argmax(action_values)
-        return NNTranslate.nn_to_state(action)
+        return NNTranslate.nn_to_action(action)
 
     def add_observation(self, s, a, r, s_, batch_size=None, learn=True):
         if batch_size is not None:
             self.batch_size = batch_size
         pos = self.memory_count % self.memory_size
         self.memory["s"][pos, :] = NNTranslate.state_to_nn(s)[np.newaxis, :]
-        self.memory["a"][pos, :] = NNTranslate.card_to_nn(a)
+        self.memory["a"][pos, :] = NNTranslate.action_to_nn(a)
         self.memory["r"][pos, :] = r
         self.memory["s_"][pos, :] = NNTranslate.state_to_nn(s_)[np.newaxis, :]
-        self.memory["m"][pos, :] = NNTranslate.get_available_mask(Brain.get_available(s_))
+        self.memory["m"][pos, :] = NNTranslate.get_available_mask(s_)
         self.memory_count += 1
         if learn:
             threading.Thread(target=self.learn).start()
