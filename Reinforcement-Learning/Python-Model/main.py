@@ -188,8 +188,13 @@ def main():
                         board[bottom + x, offset + y] = True
             r = 0
             for row in range(20):
+                if np.any(board[row, :]):
+                    r = row - 20
+                    break
+
+            for row in range(20):
                 if np.all(board[row, :]):
-                    r += 1
+                    r = 1 if r < 0 else r + 1
                     board[1:row + 1, :] = board[0:row, :]
                     board[0, :] = 0
                     np.save(str(time.time()), board)

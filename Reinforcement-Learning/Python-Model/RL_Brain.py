@@ -40,14 +40,14 @@ class RLBrain:
         w_init, b_init = tf.random_normal_initializer(0.0, 0.01), tf.constant_initializer(0.01)
 
         def hidden(previous):
-            previous = tf.compat.v1.layers.dense(previous, 10, tf.nn.leaky_relu, True,
+            previous = tf.compat.v1.layers.dense(previous, 30, tf.nn.leaky_relu, True,
                                                  kernel_initializer=w_init, bias_initializer=b_init)
-            # previous = tf.compat.v1.layers.dense(previous, 40, tf.nn.leaky_relu, True,
-            #                                      kernel_initializer=w_init, bias_initializer=b_init)
-            # previous = tf.compat.v1.layers.dense(previous, 50, tf.nn.leaky_relu, True,
-            #                                      kernel_initializer=w_init, bias_initializer=b_init)
-            # previous = tf.compat.v1.layers.dense(previous, 30, tf.nn.leaky_relu, True,
-            #                                      kernel_initializer=w_init, bias_initializer=b_init)
+            previous = tf.compat.v1.layers.dense(previous, 40, tf.nn.leaky_relu, True,
+                                                 kernel_initializer=w_init, bias_initializer=b_init)
+            previous = tf.compat.v1.layers.dense(previous, 50, tf.nn.leaky_relu, True,
+                                                 kernel_initializer=w_init, bias_initializer=b_init)
+            previous = tf.compat.v1.layers.dense(previous, 30, tf.nn.leaky_relu, True,
+                                                 kernel_initializer=w_init, bias_initializer=b_init)
             return previous
 
         with tf.compat.v1.variable_scope('eval_net_' + self.id):
