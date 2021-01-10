@@ -197,7 +197,7 @@ def main():
                     r = 1 if r < 0 else r + 1
                     board[1:row + 1, :] = board[0:row, :]
                     board[0, :] = 0
-                    np.save(str(time.time()), board)
+                    np.save("record/" + str(time.time()), board)
             s_ = board, tetro
             brain.add_observation(s, a, r, s_)
             brain.learn()
