@@ -201,6 +201,7 @@ def main():
             s_ = board, tetro
             brain.add_observation(s, a, r, s_)
             brain.learn()
+            print(game, board)
         brain.save()
 
 
