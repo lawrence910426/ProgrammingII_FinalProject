@@ -149,7 +149,7 @@ enum class GameType {
 };
 
 enum class GameResult {
-    EXIT, WIN, LOSE
+    EXIT, WIN, LOSE, DISCONNECT
 };
 
 enum class TetrisState {

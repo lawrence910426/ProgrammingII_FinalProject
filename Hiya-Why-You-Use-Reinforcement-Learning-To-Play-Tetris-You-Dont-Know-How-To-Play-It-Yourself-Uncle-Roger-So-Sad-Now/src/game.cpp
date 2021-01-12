@@ -13,9 +13,15 @@ void server_process(Server *server) {
         server->handle();
 }
 
-void client_process(Client *client) {
-    while (client && client->running)
-        client->handle();
+void client_process(Client *client, Game *game) {
+    while (client && client->running) {
+        if (!client->handle()) {
+            if (game->status == GameStatus::PLAYING)
+               game->EndGame(GameResult::DISCONNECT);
+            break;
+        }
+    }
+    delete client;
 }
 
 //void *server_process(ALLEGRO_THREAD *t, void *arg) {
@@ -80,10 +86,10 @@ Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
         else {
             char host[] = "dorm.yikuo.dev";
             client = new Client(host, 7122, *this);
+            client_thread = std::thread(client_process, client, this);
         }
         //        ALLEGRO_THREAD *client_thread = al_create_thread(client_process, client);
         //        al_start_thread(client_thread);
-        client_thread = std::thread(client_process, client);
     }
 
     tc = new TetrisController(fall, *this);
@@ -95,12 +101,16 @@ Game::~Game() {
     delete tc;
 
     if (client != nullptr) {
-        delete client;
-        client_thread.detach();
+        client->Stop();
+        if (gameType == GameType::MULTI_CLIENT)
+            client_thread.detach();
+        else if (gameType == GameType::MULTI_HOST)
+            delete client;
     }
 
     if (server != nullptr) {
-        delete server;
+        server->Stop();
+        while (server);
         server_thread.detach();
     }
 }
@@ -123,6 +133,11 @@ GameResult Game::Start() {
                 return GameResult::EXIT;
 
             case ALLEGRO_EVENT_KEY_DOWN:
+                if (status == GameStatus::END && event.keyboard.keycode == ALLEGRO_KEY_ENTER) {
+                    if (gameType == GameType::MULTI_HOST && client->players_alive.size() > 1)
+                        break;
+                    return result;
+                }
                 handleKeyPress(event.keyboard.keycode);
 
                 switch (event.keyboard.keycode) {
@@ -184,10 +199,6 @@ void Game::handleKeyPress(int keycode) {
                 server->SendGameStart();
             else if (gameType == GameType::SINGLE)
                 StartGame();
-        }
-    } else if (status == GameStatus::END) {
-        if (gameType == GameType::MULTI_CLIENT) {
-
         }
     }
 }
@@ -354,6 +365,11 @@ void Game::drawTexts() const {
                                         GAMEPLAY_X + GAMEPLAY_WIDTH/2.0, GAMEPLAY_Y + GAMEPLAY_HEIGHT/2.0,
                                         GAMEPLAY_WIDTH, 40,
                                         ALLEGRO_ALIGN_CENTER, "You WIN!\nYou are 1st place!");
+            } else if (result == GameResult::DISCONNECT) {
+                al_draw_multiline_text(Window::AirStrike40, TEXT_COLOR,
+                                       GAMEPLAY_X + GAMEPLAY_WIDTH/2.0, GAMEPLAY_Y + GAMEPLAY_HEIGHT/2.0,
+                                       GAMEPLAY_WIDTH, 40,
+                                       ALLEGRO_ALIGN_CENTER, "Disconnected from server!");
             }
         } else {
             al_draw_multiline_text(Window::AirStrike40, TEXT_COLOR,
@@ -362,10 +378,17 @@ void Game::drawTexts() const {
                                     ALLEGRO_ALIGN_CENTER, "Game over!");
         }
 
-        al_draw_multiline_text(Window::AirStrike40, TEXT_COLOR,
-                               GAMEPLAY_X + GAMEPLAY_WIDTH/2.0, GAMEPLAY_Y + GAMEPLAY_HEIGHT/4.0*3,
-                               GAMEPLAY_WIDTH, 40,
-                               ALLEGRO_ALIGN_CENTER, "Press ENTER to leave");
+        if (gameType == GameType::MULTI_HOST && client->players_alive.size() > 1) {
+            al_draw_multiline_text(Window::AirStrike30, TEXT_COLOR,
+                                   GAMEPLAY_X + GAMEPLAY_WIDTH/2.0, GAMEPLAY_Y + GAMEPLAY_HEIGHT/4.0*3,
+                                   GAMEPLAY_WIDTH, 40,
+                                   ALLEGRO_ALIGN_CENTER, "Waiting for game to finish...");
+        } else {
+            al_draw_multiline_text(Window::AirStrike30, TEXT_COLOR,
+                                   GAMEPLAY_X + GAMEPLAY_WIDTH/2.0, GAMEPLAY_Y + GAMEPLAY_HEIGHT/4.0*3,
+                                   GAMEPLAY_WIDTH, 40,
+                                   ALLEGRO_ALIGN_CENTER, "Press ENTER to return to menu");
+        }
     }
 }
 

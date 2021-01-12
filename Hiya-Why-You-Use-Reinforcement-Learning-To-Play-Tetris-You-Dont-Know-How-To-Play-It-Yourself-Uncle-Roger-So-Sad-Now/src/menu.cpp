@@ -22,11 +22,11 @@ Menu::Menu(ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
     al_register_event_source(eventQueue, al_get_timer_event_source(tick));
     al_register_event_source(eventQueue, al_get_keyboard_event_source());
 
+    al_clear_to_color(BACKGROUND_COLOR);
     al_draw_multiline_text(Window::AirStrike40, al_map_rgb(200, 200, 200),
                  GAMEPLAY_X + GAMEPLAY_WIDTH/2.0, GAMEPLAY_Y + GAMEPLAY_HEIGHT/2.0,
                            WINDOW_WIDTH, TILE_SIZE,
                  ALLEGRO_ALIGN_CENTER, "Press ENTER to play single\nPress SPACE to host a new game\nPress RSHIFT to join a game");
-    INFO("Drawn text")
     al_flip_display();
 
 }

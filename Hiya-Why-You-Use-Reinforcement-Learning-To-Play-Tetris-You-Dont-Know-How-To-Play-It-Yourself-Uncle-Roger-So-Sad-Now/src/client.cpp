@@ -33,10 +33,15 @@ Client::Client(int fd, Game &game) : master_fd(fd), is_master(true), game(game) 
 Client::~Client() {
     INFO("Client stopping...")
     close(sock);
+    INFO("Client stopped...")
 }
 
 void Client::Stop() {
     running = false;
+    if (!is_master) {
+        close(master_fd);
+        delete this;
+    }
 }
 
 bool Client::recvFromServer() {
@@ -55,7 +60,7 @@ bool Client::recvFromServer() {
     return true;
 }
 
-void Client::handle() {
+bool Client::handle() {
     FD_ZERO(&active_fds);
     FD_SET(sock, &active_fds);
 
@@ -63,13 +68,16 @@ void Client::handle() {
     int sel = select(sock + 1, &active_fds, nullptr, nullptr, nullptr);
     if (sel < 0 && errno != EINTR) {
         WARN("Select failed!")
-        FATAL("Server may be disconnected!")
+        WARN("Server may be disconnected!")
+        return false;
     } else {
         if (!recvFromServer()) {
             // Disconnected
             WARN("Server is disconnected!")
+            return false;
         }
     }
+    return true;
 }
 
 void Client::sendToServer(char *msg) const {
@@ -176,7 +184,7 @@ void Client::HandleMessage(char *msg) {
         player_alive = false;
         players_alive.erase(fd);
 
-        if (players_alive.empty())
+        if (game.status == GameStatus::PLAYING && players_alive.empty())
             game.EndGame(GameResult::WIN, 1);
     } else {
         WARN("Operation " << int(op) << " not recognized")

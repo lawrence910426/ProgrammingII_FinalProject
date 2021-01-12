@@ -28,7 +28,7 @@ class Client {
     Client(int fd, Game &game);
     ~Client();
 
-    void handle();
+    bool handle();
     bool running = true;
     void Stop();
 

@@ -8,6 +8,7 @@ using namespace Constants;
 
 ALLEGRO_FONT *Window::TechFont35;
 ALLEGRO_FONT *Window::AirStrike40;
+ALLEGRO_FONT *Window::AirStrike30;
 
 Window::Window() {
     if (!al_init())
@@ -36,6 +37,7 @@ Window::Window() {
 
     TechFont35 = al_load_ttf_font("../assets/techno_hideo.ttf", 35, 0);
     AirStrike40 = al_load_ttf_font("../assets/airstrike.ttf", 40, 0);
+    AirStrike30 = al_load_ttf_font("../assets/airstrike.ttf", 30, 0);
 
 }
 

@@ -40,10 +40,13 @@ Server::~Server() {
     for (int fd: client_fds)
         close(fd);
     close(master_fd);
+    INFO("Server stopped...")
+    game.server = nullptr;
 }
 
 void Server::Stop() {
     running = false;
+    delete this;
 }
 
 void Server::handleNewConnection() {
