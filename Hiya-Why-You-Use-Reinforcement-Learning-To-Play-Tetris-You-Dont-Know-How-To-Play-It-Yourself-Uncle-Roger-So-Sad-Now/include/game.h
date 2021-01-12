@@ -5,6 +5,9 @@
 
 #include "server.h"
 #include "client.h"
+#include "animations.h"
+
+#include <list>
 
 class Server;
 class Client;
@@ -33,11 +36,15 @@ class Game {
 
     void ReceiveAttack(int lines);
 
+    std::list<SendLineAnimation *> send_line_animations;
+
  private:
     static void drawBackground();
     void drawMulti() const;
     void drawTexts() const;
     void updateScreen();
+
+    void drawAnimations();
 
     void handleKeyPress(int keycode);
 

@@ -279,10 +279,13 @@ void TetrisController::CheckLines() {
         lines_to_clear.emplace_back(i);
     }
 
-    if (!lines_to_clear.empty())
+    if (!lines_to_clear.empty()) {
+        combo++;
         ClearLines();
-    else
+    } else {
+        combo = 0;
         CheckDeath();
+    }
 }
 
 void TetrisController::ClearLines() {
@@ -295,9 +298,35 @@ void TetrisController::ClearLines() {
             animations.emplace_back(new ClearLineAnimation(y));
         }
 
-        if (game.is_multi && !game.client->player_list.empty()) {
-            const int target = game.client->player_list.at(randint(0, game.client->player_list.size() - 1));
-            game.client->SendAttack(target, lines_to_clear.size());
+        if (game.is_multi && !game.client->player_list.empty()
+             && (lines_to_clear.size() >= 2 || combo >= 2 || !garbage_buffer.empty())) {
+            int nth, target;
+            do {
+                nth = randint(0, game.client->player_list.size() - 1);
+                target = game.client->player_list[nth];
+            } while (!std::get<2>(game.client->players[target])); // !player_alive
+
+            const int lines = lines_to_clear.size() + combo - 1;
+
+            int garbage = 0;
+            while (!garbage_buffer.empty() && garbage < lines) {
+                auto &[ls, time] = garbage_buffer.front();
+                if (lines - garbage > ls) {
+                    garbage += ls;
+                    garbage_buffer.pop_front();
+                } else {
+                    ls -= lines - garbage;
+                    garbage = lines;
+                }
+            }
+
+            const int sx = GAMEPLAY_X + GAMEPLAY_WIDTH/2;
+            const int sy = GAMEPLAY_Y + TILE_SIZE * (TILE_COUNT_V - lines_to_clear[lines_to_clear.size()/2] - 1);
+            const int dx = MULTI_X[nth] + MULTI_WIDTH/2;
+            const int dy = MULTI_Y[nth] + MULTI_HEIGHT/2;
+            game.send_line_animations.emplace_back(new SendLineAnimation(sx, sy, dx, dy));
+
+            game.client->SendAttack(target, lines + garbage);
         }
     }
 

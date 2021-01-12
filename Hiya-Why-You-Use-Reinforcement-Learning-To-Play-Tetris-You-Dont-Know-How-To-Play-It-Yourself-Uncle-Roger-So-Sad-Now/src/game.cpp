@@ -192,6 +192,8 @@ void Game::StartGame() {
     al_start_timer(fall);
     al_start_timer(das);
     status = GameStatus::PLAYING;
+
+    //send_line_animations.emplace_back(new SendLineAnimation(WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0));
 }
 
 void Game::updateScreen() {
@@ -203,6 +205,8 @@ void Game::updateScreen() {
         drawMulti();
 
     drawTexts();
+
+    drawAnimations();
 
     al_flip_display();
 }
@@ -342,3 +346,14 @@ void Game::ReceiveAttack(int lines) {
         tc->ReceiveAttack(lines);
 }
 
+void Game::drawAnimations() {
+    for (auto it = send_line_animations.begin(); it != send_line_animations.end(); ) {
+        INFO("Start  animation");
+
+        if ((*it)->NextFrame()) {
+            delete *it;
+            it = send_line_animations.erase(it);
+        } else
+            it++;
+    }
+}

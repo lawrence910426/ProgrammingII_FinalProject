@@ -59,6 +59,8 @@ class TetrisController {
 
     bool dying = false;
 
+    int combo = 0;
+
 
     static bool textures_loaded;
 

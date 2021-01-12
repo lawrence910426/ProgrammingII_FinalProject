@@ -62,12 +62,18 @@ static const double DAS_INTERVAL_SECONDS = 0.06;
 
 static const int LANDING_REGRET_TIMES = 5;
 
-static const double CLEAR_LINE_ANIMATION_S1 = 0.05;
-static const double CLEAR_LINE_ANIMATION_S2 = 0.12;
+static const double CLEAR_LINE_ANIMATION_S1 = 0.09;
+static const double CLEAR_LINE_ANIMATION_S2 = 0.16;
 static const double CLEAR_LINE_ANIMATION_END = 0.3;
 static const double CLEAR_LINE_ANIMATION_ALPHA = 1.0;
 
 static const double DEATH_ANIMATION_INTERVAL = 0.1;
+
+static const int SEND_LINE_ANIMATION_SPEED = 15;
+static const int SEND_LINE_STAR_EFFECT_PER_FRAME = 10;
+
+static const double STAR_EFFECT_LAST_SEC = 0.6;
+static const int STAR_EFFECT_SIZE = 25;
 
 static ALLEGRO_COLOR BACKGROUND_COLOR;
 static ALLEGRO_COLOR TEXT_COLOR;
