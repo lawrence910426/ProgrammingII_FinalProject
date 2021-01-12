@@ -328,7 +328,7 @@ void TetrisController::ClearLines() {
             const int dy = MULTI_Y[nth] + MULTI_HEIGHT/2;
             game.send_line_animations.emplace_back(new SendLineAnimation(sx, sy, dx, dy));
 
-            game.client->SendAttack(target, lines + garbage);
+            game.client->SendAttack(target, lines + garbage? 1: 0);
         }
     }
 
