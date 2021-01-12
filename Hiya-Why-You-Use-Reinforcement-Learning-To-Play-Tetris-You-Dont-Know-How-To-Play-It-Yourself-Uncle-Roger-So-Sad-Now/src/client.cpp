@@ -145,8 +145,10 @@ void Client::HandleMessage(char *msg) {
 
             INFO("Current Players: " << name);
 
-            if (fd != id)
+            if (fd != id) {
                 player_list.emplace_back(fd);
+                players_alive.emplace(fd);
+            }
         }
     } else if (op == HiyaOperation::START) {
         game.StartGame();
@@ -172,6 +174,10 @@ void Client::HandleMessage(char *msg) {
         INFO("Player " << fd << " Died!")
         auto &[player_name, player_board, player_alive] = players[fd];
         player_alive = false;
+        players_alive.erase(fd);
+
+        if (players_alive.empty())
+            game.EndGame(GameResult::WIN, 1);
     } else {
         WARN("Operation " << int(op) << " not recognized")
     }

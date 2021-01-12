@@ -48,6 +48,7 @@ class Client {
 
     std::map<int, std::tuple<std::string, Board, bool>> players;
     std::vector<int> player_list;
+    std::set<int> players_alive;
 
 
  private:

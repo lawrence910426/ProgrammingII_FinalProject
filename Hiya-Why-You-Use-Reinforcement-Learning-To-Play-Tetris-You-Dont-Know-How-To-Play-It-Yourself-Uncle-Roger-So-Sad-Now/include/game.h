@@ -29,9 +29,13 @@ class Game {
 
     void StartGame();
 
+    void EndGame(GameResult, int place = 1);
+
     Server *server = nullptr;
     Client *client = nullptr;
     GameStatus status = GameStatus::PENDING;
+    GameResult result;
+    int place;
     bool is_multi = false;
 
     void ReceiveAttack(int lines);

@@ -298,13 +298,15 @@ void TetrisController::ClearLines() {
             animations.emplace_back(new ClearLineAnimation(y));
         }
 
-        if (game.is_multi && !game.client->player_list.empty()
+        if (game.is_multi && !game.client->players_alive.empty()
              && (lines_to_clear.size() >= 2 || combo >= 2 || !garbage_buffer.empty())) {
-            int nth, target;
-            do {
-                nth = randint(0, game.client->player_list.size() - 1);
-                target = game.client->player_list[nth];
-            } while (!std::get<2>(game.client->players[target])); // !player_alive
+            int n = randint(0, game.client->players_alive.size() - 1);
+            auto it = game.client->players_alive.begin();
+            while (n--)
+                it++;
+            const int target = *it;
+            const int nth = std::find(game.client->player_list.begin(), game.client->player_list.end(), target) - game.client->player_list.begin();
+
 
             const int lines = lines_to_clear.size() + combo - 1;
 
@@ -379,6 +381,8 @@ void TetrisController::Dying() {
         animations.clear();
         y = 0;
         last_time = 0;
+        if (game.is_multi)
+            game.client->SendDead();
     }
 
     if (y < TILE_COUNT_V && al_get_time() - last_time >= DEATH_ANIMATION_INTERVAL) {
@@ -403,9 +407,11 @@ void TetrisController::Dying() {
     if (finished) {
         dying = false;
 //        garbage_buffer.clear();
+
         if (game.is_multi)
-            game.client->SendDead();
-        game.status = GameStatus::END;
+            game.EndGame(GameResult::LOSE, game.client->players_alive.size() + 1);
+        else
+            game.EndGame(GameResult::LOSE);
     }
 }
 

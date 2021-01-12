@@ -185,6 +185,10 @@ void Game::handleKeyPress(int keycode) {
             else if (gameType == GameType::SINGLE)
                 StartGame();
         }
+    } else if (status == GameStatus::END) {
+        if (gameType == GameType::MULTI_CLIENT) {
+
+        }
     }
 }
 
@@ -337,8 +341,32 @@ void Game::drawTexts() const {
                                    GAMEPLAY_WIDTH, 40,
                                    ALLEGRO_ALIGN_CENTER, "Press ENTER to\nstart game");
         }
-    }
+    } else if (status == GameStatus::END) {
+        if (is_multi) {
+            if (result == GameResult::LOSE) {
+                al_draw_multiline_textf(Window::AirStrike40, TEXT_COLOR,
+                                        GAMEPLAY_X + GAMEPLAY_WIDTH/2.0, GAMEPLAY_Y + GAMEPLAY_HEIGHT/2.0,
+                                        GAMEPLAY_WIDTH, 40,
+                                        ALLEGRO_ALIGN_CENTER, "You died!\nYou are %d%s place!",
+                                        place, place == 2? "nd": place == 3? "th": "rd");
+            } else if (result == GameResult::WIN) {
+                al_draw_multiline_text(Window::AirStrike40, TEXT_COLOR,
+                                        GAMEPLAY_X + GAMEPLAY_WIDTH/2.0, GAMEPLAY_Y + GAMEPLAY_HEIGHT/2.0,
+                                        GAMEPLAY_WIDTH, 40,
+                                        ALLEGRO_ALIGN_CENTER, "You WIN!\nYou are 1st place!");
+            }
+        } else {
+            al_draw_multiline_text(Window::AirStrike40, TEXT_COLOR,
+                                    GAMEPLAY_X + GAMEPLAY_WIDTH/2.0, GAMEPLAY_Y + GAMEPLAY_HEIGHT/2.0,
+                                    GAMEPLAY_WIDTH, 40,
+                                    ALLEGRO_ALIGN_CENTER, "Game over!");
+        }
 
+        al_draw_multiline_text(Window::AirStrike40, TEXT_COLOR,
+                               GAMEPLAY_X + GAMEPLAY_WIDTH/2.0, GAMEPLAY_Y + GAMEPLAY_HEIGHT/4.0*3,
+                               GAMEPLAY_WIDTH, 40,
+                               ALLEGRO_ALIGN_CENTER, "Press ENTER to leave");
+    }
 }
 
 void Game::ReceiveAttack(int lines) {
@@ -356,4 +384,14 @@ void Game::drawAnimations() {
         } else
             it++;
     }
+}
+
+void Game::EndGame(GameResult res, int pl) {
+    result = res;
+    place = pl;
+
+    status = GameStatus::END;
+
+    al_stop_timer(das);
+    al_stop_timer(fall);
 }
