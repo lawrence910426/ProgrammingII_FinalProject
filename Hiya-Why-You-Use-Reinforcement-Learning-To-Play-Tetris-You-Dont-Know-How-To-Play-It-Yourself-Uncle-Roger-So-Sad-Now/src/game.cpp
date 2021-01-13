@@ -84,7 +84,7 @@ Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
         if (type == GameType::MULTI_HOST)
             client = new Client(server->master_fd, *this);
         else {
-            char host[] = "dorm.yikuo.dev";
+            char host[] = "192.168.89.68";
             client = new Client(host, 7122, *this);
             client_thread = std::thread(client_process, client, this);
         }

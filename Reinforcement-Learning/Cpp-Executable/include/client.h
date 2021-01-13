@@ -16,16 +16,13 @@
 #include <map>
 #include <set>
 
-#include "game.h"
-
-
-class Game;
-
+#include "globals.h"
+using namespace Constants;
 
 class Client {
  public:
-    Client(char *host, int port, Game &game);
-    Client(int fd, Game &game);
+    Client(char *host, int port);
+    Client(int fd);
     ~Client();
 
     bool handle();
@@ -35,7 +32,7 @@ class Client {
     void HandleMessage(char *msg);
 
     void SendRegister(std::string &name);
-    void SendUpdateBoard(Board &board);
+    void SendUpdateBoard(std::vector<std::vector<int> > board);
     void SendAttack(int target, int lines);
     void SendDead();
 
@@ -46,12 +43,12 @@ class Client {
     int sock{};
     bool is_master;
 
-    std::map<int, std::tuple<std::string, Board, bool>> players;
     std::vector<int> player_list;
     std::set<int> players_alive;
 
+    bool should_start_game = false;
 
- private:
+private:
     std::set<int> client_fds;
 
     sockaddr_in addr{};
@@ -66,6 +63,4 @@ class Client {
     bool recvFromServer();
 
     void sendToServer(char *message) const;
-
-    Game &game;
 };
