@@ -272,7 +272,7 @@ void TetrisController::Place() {
 
 
 void TetrisController::CheckLines() {
-    for (int i = 0; i < board.size(); i++) {
+    for (int i = board.size() - 1; i >= 0; i--) {
         if (std::any_of(board[i].begin(), board[i].end(),
                         [](Tile &t){return t == Tile::NONE;}))
             continue;
@@ -344,7 +344,7 @@ void TetrisController::ClearLines() {
     }
 
     if (finished) {
-        for (int y: lines_to_clear | std::views::reverse) {
+        for (int y: lines_to_clear) {
             board.erase(board.begin() + y);
             board.emplace_back(std::vector<Tile>(TILE_COUNT_H, Tile::NONE));
         }
