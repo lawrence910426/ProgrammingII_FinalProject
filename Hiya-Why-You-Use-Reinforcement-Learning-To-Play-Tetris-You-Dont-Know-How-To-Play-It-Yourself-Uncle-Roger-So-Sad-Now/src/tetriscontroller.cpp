@@ -2,7 +2,6 @@
 
 #include <allegro5/allegro_primitives.h>
 #include <random>
-#include <ranges>
 #include "log.h"
 
 #include "animations.h"
