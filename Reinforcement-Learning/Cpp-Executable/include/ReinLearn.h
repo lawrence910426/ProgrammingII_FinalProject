@@ -95,7 +95,7 @@ class ReinLearn {
 
 public:
     ReinLearn() {
-        this->model = new Model("../../pb/load_model.pb");
+        this->model = new Model("../../pb/whole_night_neg_height_dense.pb");
         this->input = new Tensor{*model, "s1"};
         this->output = new Tensor{*model, "eval_1"};
     }
