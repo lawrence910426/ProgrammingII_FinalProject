@@ -105,7 +105,7 @@ Game::~Game() {
         if (gameType == GameType::MULTI_CLIENT)
             client_thread.detach();
         else if (gameType == GameType::MULTI_HOST)
-            delete client;
+            delete client, client = nullptr;
     }
 
     if (server != nullptr) {
@@ -308,6 +308,8 @@ void Game::drawBackground() {
 }
 
 void Game::drawMulti() const {
+    if (client == nullptr)
+        return;
     auto &players = client->players;
     auto &player_list = client->player_list;
 
