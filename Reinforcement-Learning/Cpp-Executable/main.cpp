@@ -1,18 +1,21 @@
 #include "include/Model.h"
 #include "include/Tensor.h"
 
+#include "SRS.h"
+
 #include <numeric>
 #include <iomanip>
 
-class tetro {
-public:
-    bool data[4][4];
-};
+struct tetro { bool data[4][4]; };
 
 class tetromino {
+    int type;
 public:
-    static tetro Get(int direction) {
-
+    tetromino(int t): type(t) {}
+    tetro Get(int direction) {
+        tetro ans;
+        memcpy(ans.data, SRS[type][direction], sizeof(ans));
+        return ans;
     }
 };
 
@@ -84,5 +87,5 @@ public:
 };
 
 int main() {
-    return 0;
+
 }
