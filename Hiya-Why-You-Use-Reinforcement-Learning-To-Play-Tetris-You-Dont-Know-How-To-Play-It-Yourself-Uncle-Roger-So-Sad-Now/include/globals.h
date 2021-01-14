@@ -145,7 +145,7 @@ enum class GameStatus {
 };
 
 enum class GameType {
-    SINGLE, MULTI_HOST, MULTI_CLIENT, EXIT
+    SINGLE, MULTI_CLIENT, MULTI_HOST, EXIT
 };
 
 enum class GameResult {
@@ -176,6 +176,10 @@ enum class HiyaOperation {
 struct Position {
     int x;
     int y;
+};
+
+enum class MenuState {
+    TITLE, SELECT_GAME, ENTER_NAME, ENTER_HOST
 };
 
 using Board = std::deque<std::vector<Tile>>;

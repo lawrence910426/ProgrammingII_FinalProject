@@ -19,6 +19,13 @@ class Window {
     static ALLEGRO_FONT *TechFont35;
     static ALLEGRO_FONT *AirStrike40;
     static ALLEGRO_FONT *AirStrike30;
+    static ALLEGRO_FONT *AirStrike55;
+    static ALLEGRO_FONT *AirStrike70;
+    static ALLEGRO_FONT *AirStrike80;
+
+    static char name[50];
+    static char host[50];
+
 
  private:
     ALLEGRO_DISPLAY *display;

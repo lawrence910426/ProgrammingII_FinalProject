@@ -7,6 +7,7 @@ using namespace Constants;
 #include "window.h"
 
 bool Game::textures_loaded = false;
+bool Game::client_running = false;
 
 void server_process(Server *server) {
     while (server && server->running)
@@ -46,7 +47,7 @@ void client_process(Client *client, Game *game) {
 //    return nullptr;
 //}
 
-Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
+Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick, char name[], char host[]): name(std::string(name)) {
     eventQueue = al_create_event_queue();
     if (!eventQueue)
         FATAL("Failed to create event queue!");
@@ -84,7 +85,7 @@ Game::Game(GameType type, ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
         if (type == GameType::MULTI_HOST)
             client = new Client(server->master_fd, *this);
         else {
-            char host[] = "192.168.89.68";
+//            char host[] = "192.168.89.68";
             client = new Client(host, 7122, *this);
             client_thread = std::thread(client_process, client, this);
         }
@@ -118,7 +119,6 @@ Game::~Game() {
 GameResult Game::Start() {
     ALLEGRO_EVENT event;
 
-    std::string name = "HelloYi";
     if (is_multi)
         client->SendRegister(name);
 
@@ -308,7 +308,7 @@ void Game::drawBackground() {
 }
 
 void Game::drawMulti() const {
-    if (client == nullptr)
+    if (!client_running)
         return;
     auto &players = client->players;
     auto &player_list = client->player_list;
@@ -338,6 +338,10 @@ void Game::drawMulti() const {
                                      MULTI_X[p] + MULTI_WIDTH, MULTI_Y[p] + MULTI_HEIGHT,
                                      al_map_rgba(20, 20, 20, 150));
         }
+        al_draw_text(Window::AirStrike30, al_map_rgb(50, 50, 50),
+                     MULTI_X[p] + MULTI_WIDTH / 2.0,
+                     MULTI_Y[p] + MULTI_HEIGHT,
+                     ALLEGRO_ALIGN_CENTER, player_name.c_str());
     }
 }
 
@@ -394,9 +398,16 @@ void Game::drawTexts() const {
     }
 }
 
-void Game::ReceiveAttack(int lines) {
-    if (status == GameStatus::PLAYING)
+void Game::ReceiveAttack(int attacker, int lines) {
+    if (status == GameStatus::PLAYING) {
+        const int nth = std::find(client->player_list.begin(), client->player_list.end(), attacker) - client->player_list.begin();
+        const int dx = GAMEPLAY_X + GAMEPLAY_WIDTH / 2;
+        const int dy = GAMEPLAY_Y + GAMEPLAY_HEIGHT / 2;
+        const int sx = MULTI_X[nth] + MULTI_WIDTH/2;
+        const int sy = MULTI_Y[nth] + MULTI_HEIGHT/2;
+        send_line_animations.emplace_back(new SendLineAnimation(sx, sy, dx, dy));
         tc->ReceiveAttack(lines);
+    }
 }
 
 void Game::drawAnimations() {
