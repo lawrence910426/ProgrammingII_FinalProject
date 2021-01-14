@@ -185,9 +185,10 @@ void Game::handleKeyPress(int keycode) {
             tc->Move(true);
         else if (keycode == ALLEGRO_KEY_UP)
             tc->Rotate(false);
-        else if (keycode == ALLEGRO_KEY_DOWN)
+        else if (keycode == ALLEGRO_KEY_DOWN) {
+            al_play_sample(Window::se_move, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
             tc->Fall();
-        else if (keycode == ALLEGRO_KEY_SPACE)
+        } else if (keycode == ALLEGRO_KEY_SPACE)
             tc->HardFall();
         else if (keycode == ALLEGRO_KEY_C)
             tc->Hold();
@@ -207,6 +208,7 @@ void Game::StartGame() {
     al_start_timer(fall);
     al_start_timer(das);
     status = GameStatus::PLAYING;
+    al_play_sample(Window::gameplay_bgm, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &Window::gameplay_sampid);
 
     //send_line_animations.emplace_back(new SendLineAnimation(WINDOW_WIDTH, WINDOW_HEIGHT, 0, 0));
 }
@@ -416,6 +418,7 @@ void Game::drawAnimations() {
 
         if ((*it)->NextFrame()) {
             delete *it;
+            al_play_sample(Window::se_attack, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
             it = send_line_animations.erase(it);
         } else
             it++;
