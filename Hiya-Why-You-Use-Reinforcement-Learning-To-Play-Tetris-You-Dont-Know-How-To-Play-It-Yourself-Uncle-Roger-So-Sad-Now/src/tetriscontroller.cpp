@@ -397,6 +397,9 @@ void TetrisController::Dying() {
         last_time = 0;
         if (game.is_multi)
             game.client->SendDead();
+
+        al_stop_sample(&Window::gameplay_sampid);
+        al_play_sample(Window::me_lose, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
     }
 
     if (y < TILE_COUNT_V && al_get_time() - last_time >= DEATH_ANIMATION_INTERVAL) {

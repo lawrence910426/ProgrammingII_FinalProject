@@ -33,6 +33,13 @@ class Window {
     static ALLEGRO_SAMPLE *se_move;
     static ALLEGRO_SAMPLE *se_harddrop;
     static ALLEGRO_SAMPLE *se_attack;
+    static ALLEGRO_SAMPLE *me_win;
+    static ALLEGRO_SAMPLE *me_lose;
+
+    static ALLEGRO_SAMPLE *se_enter;
+    static ALLEGRO_SAMPLE *se_select;
+    static ALLEGRO_SAMPLE *se_switch;
+    static ALLEGRO_SAMPLE *se_type;
 
     static ALLEGRO_SAMPLE_ID menu_sampid;
     static ALLEGRO_SAMPLE_ID gameplay_sampid;

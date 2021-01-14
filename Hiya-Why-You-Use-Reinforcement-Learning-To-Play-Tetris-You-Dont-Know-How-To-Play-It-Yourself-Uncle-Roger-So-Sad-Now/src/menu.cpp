@@ -180,18 +180,25 @@ void Menu::draw() {
 
 bool Menu::handleKeyPress(int key) {
     if (state == MenuState::TITLE) {
-        if (key == ALLEGRO_KEY_ENTER)
+        if (key == ALLEGRO_KEY_ENTER) {
+            al_play_sample(Window::se_enter, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
             state = MenuState::SELECT_GAME;
+        }
     } else if (state == MenuState::SELECT_GAME) {
         if (key == ALLEGRO_KEY_ENTER) {
-            if (selection == GameType::SINGLE)
+            if (selection == GameType::SINGLE) {
+                al_play_sample(Window::se_enter, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
                 return true;
-            else
+            } else {
+                al_play_sample(Window::se_select, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
                 state = MenuState::ENTER_NAME;
+            }
         } else if (key == ALLEGRO_KEY_LEFT) {
+            al_play_sample(Window::se_switch, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
             if (selection > GameType::SINGLE)
                 selection = GameType(int(selection) - 1);
         } else if (key == ALLEGRO_KEY_RIGHT) {
+            al_play_sample(Window::se_switch, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
             if (selection < GameType::MULTI_HOST)
                 selection = GameType(int(selection) + 1);
         }
@@ -200,27 +207,35 @@ bool Menu::handleKeyPress(int key) {
         int &siz = state == MenuState::ENTER_NAME? namep: hostp;
 
         if (key == ALLEGRO_KEY_ENTER) {
-            if (selection == GameType::MULTI_HOST || state == MenuState::ENTER_HOST)
+            if (selection == GameType::MULTI_HOST || state == MenuState::ENTER_HOST) {
+                al_play_sample(Window::se_enter, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
                 return true;
-            else
+            } else {
+                al_play_sample(Window::se_select, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
                 state = MenuState::ENTER_HOST;
+            }
         } else if (key == ALLEGRO_KEY_BACKSPACE) {
             if (siz > 0)
                 siz--;
+            al_play_sample(Window::se_move, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
         } else if (key >= ALLEGRO_KEY_A && key <= ALLEGRO_KEY_Z) {
             input[siz++] = key - ALLEGRO_KEY_A + 'A';
+            al_play_sample(Window::se_move, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
         } else if (key >= ALLEGRO_KEY_0 && key <= ALLEGRO_KEY_9) {
             input[siz++] = key - ALLEGRO_KEY_0 + '0';
+            al_play_sample(Window::se_move, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
         } else if (key >= ALLEGRO_KEY_PAD_0 && key <= ALLEGRO_KEY_PAD_9) {
             input[siz++] = key - ALLEGRO_KEY_PAD_0 + '0';
+            al_play_sample(Window::se_move, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
         } else if (key == ALLEGRO_KEY_SPACE) {
             input[siz++] = ' ';
+            al_play_sample(Window::se_move, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
         } else if (key == 73 || key == 90) {
             input[siz++] = '.';
+            al_play_sample(Window::se_move, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
         }
 
         input[siz] = '\0';
-
     }
     return false;
 }

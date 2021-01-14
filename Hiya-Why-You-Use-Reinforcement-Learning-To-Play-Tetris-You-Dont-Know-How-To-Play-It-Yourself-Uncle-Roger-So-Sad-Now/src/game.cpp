@@ -119,6 +119,8 @@ Game::~Game() {
 GameResult Game::Start() {
     ALLEGRO_EVENT event;
 
+    INFO(name)
+    INFO(name.length());
     if (is_multi)
         client->SendRegister(name);
 
@@ -430,6 +432,11 @@ void Game::EndGame(GameResult res, int pl) {
     place = pl;
 
     status = GameStatus::END;
+
+    if (res == GameResult::WIN) {
+        al_stop_sample(&Window::gameplay_sampid);
+        al_play_sample(Window::me_win, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
+    }
 
     al_stop_timer(das);
     al_stop_timer(fall);

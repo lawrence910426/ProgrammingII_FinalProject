@@ -24,6 +24,14 @@ ALLEGRO_SAMPLE *Window::se_move;
 ALLEGRO_SAMPLE *Window::se_harddrop;
 ALLEGRO_SAMPLE *Window::se_attack;
 
+ALLEGRO_SAMPLE *Window::me_win;
+ALLEGRO_SAMPLE *Window::me_lose;
+
+ALLEGRO_SAMPLE *Window::se_enter;
+ALLEGRO_SAMPLE *Window::se_select;
+ALLEGRO_SAMPLE *Window::se_switch;
+ALLEGRO_SAMPLE *Window::se_type;
+
 ALLEGRO_SAMPLE_ID Window::menu_sampid;
 ALLEGRO_SAMPLE_ID Window::gameplay_sampid;
 
@@ -82,6 +90,12 @@ Window::Window() {
     se_move = al_load_sample("../assets/se_game_move.wav");
     se_harddrop = al_load_sample("../assets/se_game_harddrop.wav");
     se_attack = al_load_sample("../assets/se_game_attack1.wav");
+    me_win = al_load_sample("../assets/me_game_clear.wav");
+    me_lose = al_load_sample("../assets/me_game_gameover.wav");
+    se_enter = al_load_sample("../assets/se_sys_ok.wav");
+    se_switch = al_load_sample("../assets/se_sys_cursor2.wav");
+    se_type = al_load_sample("../assets/se_sys_cursor1.wav");
+    se_select = al_load_sample("../assets/se_sys_select.wav");
 
 }
 
@@ -107,7 +121,6 @@ void Window::Start() {
         auto *game = new Game(selection, display, tick, name, host);
         GameResult result = game->Start();
         delete game;
-        al_stop_sample(&gameplay_sampid);
 
 
         if (result == GameResult::EXIT)
