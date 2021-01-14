@@ -32,7 +32,8 @@ public:
         data = std::vector<std::vector<bool> >(20, std::vector<bool>(10, false));
         previous = std::vector<std::vector<bool> >(20, std::vector<bool>(10, false));
     }
-    bool drop_tetro(tetro T, int offset) {
+    bool drop_tetro(tetro T, int offset, int *reward = nullptr) {
+        if(reward != nullptr) *reward = 0;
         previous = data; prev = show;
         int dropdown = 0;
         for(dropdown = 0;dropdown < 20;dropdown += 1) {
@@ -59,6 +60,7 @@ public:
                     data[0][jj] = false;
                     show[0][jj] = 1;
                 }
+                *reward += 1;
             }
         }
 

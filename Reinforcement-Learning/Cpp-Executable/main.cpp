@@ -21,13 +21,15 @@ int main() {
         tetromino *T = new tetromino(tetro_type);
         int ans = AI->Get(status, T);
         int direction = ans / 10, offset = ans % 10;
-        if(status->drop_tetro(T->Get(direction), offset)) break;
+        int reward;
+        if(status->drop_tetro(T->Get(direction), offset, &reward)) break;
         for(int i = 0;i < 20;i++) {
             for(int j = 0;j < 10;j++) std::cout << status->show[i][j] << " ";
             std::cout << std::endl;
         }
         std::cout << "---------------------------" << std::endl;
         client->SendUpdateBoard(status->show);
+        if(reward > 0) client->SendAttack(0, reward);
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         delete T;
     }
