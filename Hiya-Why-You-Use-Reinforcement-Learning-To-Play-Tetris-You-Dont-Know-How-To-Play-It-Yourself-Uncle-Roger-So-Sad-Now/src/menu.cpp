@@ -10,6 +10,7 @@ using namespace Constants;
 
 bool Menu::texture_loaded = false;
 ALLEGRO_BITMAP *Menu::background_img;
+ALLEGRO_BITMAP *Menu::hiya_img;
 
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
@@ -32,6 +33,7 @@ Menu::Menu(ALLEGRO_DISPLAY *display, ALLEGRO_TIMER *tick) {
 
     if (!texture_loaded) {
         background_img = al_load_bitmap("../assets/menu-bg.jpg");
+        hiya_img = al_load_bitmap("../assets/haiya.png");
 
         texture_loaded = true;
     }
@@ -83,6 +85,14 @@ void Menu::draw() {
             if (al_get_time() - last_draw >= 1.3)
                 last_draw = al_get_time();
         }
+        const int WIDTH = 500;
+        const int HEIGHT = 300;
+        al_draw_scaled_bitmap(hiya_img, 0, 0, al_get_bitmap_width(hiya_img), al_get_bitmap_height(hiya_img),
+                              (WINDOW_WIDTH - WIDTH)/2.0, WINDOW_HEIGHT / 10.0, WIDTH, HEIGHT, 0);
+        al_draw_multiline_text(Window::AirStrike80, al_map_rgb(185, 3, 30),
+                     WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 2.0,
+                               WINDOW_WIDTH /6.0 * 5, 50.0,
+                     ALLEGRO_ALIGN_CENTER, "why you use reinforcement learning to play tetris\nuncle roger so sad now");
     } else if (state == MenuState::SELECT_GAME) {
         al_draw_text(Window::AirStrike80, al_map_rgb(255, 255, 255),
                      WINDOW_WIDTH / 2.0, WINDOW_HEIGHT / 6.0,

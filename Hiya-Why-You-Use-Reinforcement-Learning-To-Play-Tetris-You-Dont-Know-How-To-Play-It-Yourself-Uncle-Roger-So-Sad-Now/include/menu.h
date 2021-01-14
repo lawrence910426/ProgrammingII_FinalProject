@@ -18,6 +18,7 @@ class Menu {
     int hostp = 0;
 
     static ALLEGRO_BITMAP *background_img;
+    static ALLEGRO_BITMAP *hiya_img;
  private:
     static bool texture_loaded;
     ALLEGRO_EVENT_QUEUE *eventQueue;
@@ -29,7 +30,6 @@ class Menu {
     bool handleKeyPress(int key);
 
     void draw();
-    void drawBackground();
 
 
 
