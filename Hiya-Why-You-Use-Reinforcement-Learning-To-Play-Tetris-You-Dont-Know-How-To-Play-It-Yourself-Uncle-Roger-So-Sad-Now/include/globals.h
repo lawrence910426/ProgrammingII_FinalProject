@@ -3,6 +3,8 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 #include <queue>
 #include <vector>
 #include <random>
@@ -145,7 +147,7 @@ enum class GameStatus {
 };
 
 enum class GameType {
-    SINGLE, MULTI_HOST, MULTI_CLIENT, EXIT
+    SINGLE, MULTI_CLIENT, MULTI_HOST, EXIT
 };
 
 enum class GameResult {
@@ -176,6 +178,10 @@ enum class HiyaOperation {
 struct Position {
     int x;
     int y;
+};
+
+enum class MenuState {
+    TITLE, SELECT_GAME, ENTER_NAME, ENTER_HOST
 };
 
 using Board = std::deque<std::vector<Tile>>;

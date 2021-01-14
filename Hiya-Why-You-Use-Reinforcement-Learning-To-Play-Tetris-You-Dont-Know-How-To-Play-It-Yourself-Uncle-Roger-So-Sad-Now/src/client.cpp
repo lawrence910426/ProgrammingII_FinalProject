@@ -26,12 +26,16 @@ Client::Client(char *host, int port, Game &game) : is_master(false), game(game) 
         FATAL("Connection failed!")
 
     INFO("Client connected to " << inet_ntoa(addr.sin_addr) << ":" << ntohs(addr.sin_port))
+    Game::client_running = true;
 }
 
-Client::Client(int fd, Game &game) : master_fd(fd), is_master(true), game(game) {}
+Client::Client(int fd, Game &game) : master_fd(fd), is_master(true), game(game) {
+    Game::client_running = true;
+}
 
 Client::~Client() {
     INFO("Client stopping...")
+    Game::client_running = false;
     close(sock);
     INFO("Client stopped...")
 }
@@ -176,7 +180,7 @@ void Client::HandleMessage(char *msg) {
         INFO("Player " << attacker << " attacked " << target << " with " << lines << " lines!")
 
         if (target == id && game.status == GameStatus::PLAYING)
-            game.ReceiveAttack(lines);
+            game.ReceiveAttack(attacker, lines);
     } else if (op == HiyaOperation::DEATH) {
         const int fd = int(msg[1]);
         INFO("Player " << fd << " Died!")

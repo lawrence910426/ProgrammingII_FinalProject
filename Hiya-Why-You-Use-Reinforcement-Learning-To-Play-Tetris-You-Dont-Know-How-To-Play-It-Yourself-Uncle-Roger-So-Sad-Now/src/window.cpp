@@ -9,6 +9,34 @@ using namespace Constants;
 ALLEGRO_FONT *Window::TechFont35;
 ALLEGRO_FONT *Window::AirStrike40;
 ALLEGRO_FONT *Window::AirStrike30;
+ALLEGRO_FONT *Window::AirStrike55;
+ALLEGRO_FONT *Window::AirStrike70;
+ALLEGRO_FONT *Window::AirStrike80;
+
+ALLEGRO_SAMPLE *Window::menu_bgm;
+ALLEGRO_SAMPLE *Window::gameplay_bgm;
+ALLEGRO_SAMPLE *Window::se_single;
+ALLEGRO_SAMPLE *Window::se_double;
+ALLEGRO_SAMPLE *Window::se_triple;
+ALLEGRO_SAMPLE *Window::se_tetris;
+ALLEGRO_SAMPLE *Window::se_hold;
+ALLEGRO_SAMPLE *Window::se_move;
+ALLEGRO_SAMPLE *Window::se_harddrop;
+ALLEGRO_SAMPLE *Window::se_attack;
+
+ALLEGRO_SAMPLE *Window::me_win;
+ALLEGRO_SAMPLE *Window::me_lose;
+
+ALLEGRO_SAMPLE *Window::se_enter;
+ALLEGRO_SAMPLE *Window::se_select;
+ALLEGRO_SAMPLE *Window::se_switch;
+ALLEGRO_SAMPLE *Window::se_type;
+
+ALLEGRO_SAMPLE_ID Window::menu_sampid;
+ALLEGRO_SAMPLE_ID Window::gameplay_sampid;
+
+char Window::name[50];
+char Window::host[50];
 
 Window::Window() {
     if (!al_init())
@@ -31,13 +59,43 @@ Window::Window() {
         FATAL("Font addon init failed!")
 
     if (!al_init_ttf_addon())
-        FATAL("Font addon init failed!")
+        FATAL("TTF addon init failed!")
+
+    if (!al_install_audio())
+        FATAL("Audio init failed!")
+
+    if (!al_init_acodec_addon())
+        FATAL("Acodec init failed!")
+
+    if (!al_reserve_samples(16))
+        FATAL("Samples init failed!")
+
 
     init_colors();
 
     TechFont35 = al_load_ttf_font("../assets/techno_hideo.ttf", 35, 0);
     AirStrike40 = al_load_ttf_font("../assets/airstrike.ttf", 40, 0);
     AirStrike30 = al_load_ttf_font("../assets/airstrike.ttf", 30, 0);
+    AirStrike55 = al_load_ttf_font("../assets/airstrike.ttf", 55, 0);
+    AirStrike70 = al_load_ttf_font("../assets/airstrike.ttf", 70, 0);
+    AirStrike80 = al_load_ttf_font("../assets/airstrike.ttf", 80, 0);
+
+    menu_bgm = al_load_sample("../assets/menu-bgm.wav");
+    gameplay_bgm = al_load_sample("../assets/gameplay-bgm.wav");
+    se_single = al_load_sample("../assets/se_game_single.wav");
+    se_double = al_load_sample("../assets/se_game_double.wav");
+    se_triple = al_load_sample("../assets/se_game_triple.wav");
+    se_tetris = al_load_sample("../assets/se_game_tetris.wav");
+    se_hold = al_load_sample("../assets/se_game_hold.wav");
+    se_move = al_load_sample("../assets/se_game_move.wav");
+    se_harddrop = al_load_sample("../assets/se_game_harddrop.wav");
+    se_attack = al_load_sample("../assets/se_game_attack1.wav");
+    me_win = al_load_sample("../assets/me_game_clear.wav");
+    me_lose = al_load_sample("../assets/me_game_gameover.wav");
+    se_enter = al_load_sample("../assets/se_sys_ok.wav");
+    se_switch = al_load_sample("../assets/se_sys_cursor2.wav");
+    se_type = al_load_sample("../assets/se_sys_cursor1.wav");
+    se_select = al_load_sample("../assets/se_sys_select.wav");
 
 }
 
@@ -50,17 +108,20 @@ Window::~Window() {
 void Window::Start() {
     al_start_timer(tick);
     for (;;) {
+        al_play_sample(menu_bgm, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &menu_sampid);
         auto *menu = new Menu(display, tick);
         GameType selection = menu->Start();
         delete menu;
+        al_stop_sample(&menu_sampid);
 
         INFO("Game selected: " << int(selection));
         if (selection == GameType::EXIT)
             return;
 
-        auto *game = new Game(selection, display, tick);
+        auto *game = new Game(selection, display, tick, name, host);
         GameResult result = game->Start();
         delete game;
+
 
         if (result == GameResult::EXIT)
             return;

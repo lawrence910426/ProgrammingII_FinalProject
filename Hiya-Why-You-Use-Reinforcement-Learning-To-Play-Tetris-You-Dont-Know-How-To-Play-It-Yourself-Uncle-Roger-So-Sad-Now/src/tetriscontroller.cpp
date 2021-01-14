@@ -5,6 +5,7 @@
 #include "log.h"
 
 #include "animations.h"
+#include "window.h"
 
 bool TetrisController::textures_loaded = false;
 ALLEGRO_BITMAP *TetrisController::tetrimino_textures[10];
@@ -156,6 +157,8 @@ bool TetrisController::Hold() {
     delete falling;
     falling = nullptr;
 
+    al_play_sample(Window::se_hold, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
+
     if (to_hold == Tile::NONE)
         NextTetromino();
     else {
@@ -179,6 +182,7 @@ bool TetrisController::Rotate(bool ccw) {
         remaining_regret_times--;
         state = TetrisState::FALLING;
     }
+    al_play_sample(Window::se_move, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
 
     return true;
 }
@@ -189,6 +193,7 @@ bool TetrisController::Move(bool left) {
     bool success = falling->Move(left);
     if (!success)
         return false;
+    al_play_sample(Window::se_move, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
 
     if (remaining_regret_times > 0 && state == TetrisState::LANDING) {
         remaining_regret_times--;
@@ -216,6 +221,7 @@ void TetrisController::Fall() {
 void TetrisController::HardFall() {
     if (state == TetrisState::FALLING || state == TetrisState::LANDING) {
         falling->HardFall();
+        al_play_sample(Window::se_harddrop, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
         Place();
     }
 }
@@ -296,6 +302,15 @@ void TetrisController::ClearLines() {
             board[y].assign(TILE_COUNT_H, Tile::NONE);
             animations.emplace_back(new ClearLineAnimation(y));
         }
+
+        if (lines_to_clear.size() == 1)
+            al_play_sample(Window::se_single, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
+        else if (lines_to_clear.size() == 2)
+            al_play_sample(Window::se_double, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
+        else if (lines_to_clear.size() == 3)
+            al_play_sample(Window::se_triple, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
+        else if (lines_to_clear.size() >= 4)
+            al_play_sample(Window::se_tetris, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
 
         if (game.is_multi && !game.client->players_alive.empty()
              && (lines_to_clear.size() >= 2 || combo >= 2 || !garbage_buffer.empty())) {
@@ -382,6 +397,9 @@ void TetrisController::Dying() {
         last_time = 0;
         if (game.is_multi)
             game.client->SendDead();
+
+        al_stop_sample(&Window::gameplay_sampid);
+        al_play_sample(Window::me_lose, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, nullptr);
     }
 
     if (y < TILE_COUNT_V && al_get_time() - last_time >= DEATH_ANIMATION_INTERVAL) {

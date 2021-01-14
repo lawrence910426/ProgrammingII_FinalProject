@@ -170,7 +170,7 @@ def show(title, board):
 def main():
     sess = tf.compat.v1.Session()
     brain = RLBrain(sess, 1)
-    for game in range(100):
+    for game in range(10000):
         board = np.zeros((20, 10), dtype=np.bool)
         while True:
             tetro = Tetromino[np.random.randint(0, 7)]
@@ -194,7 +194,7 @@ def main():
 
             for row in range(20):
                 if np.all(board[row, :]):
-                    r = 1 if r < 0 else r + 1
+                    r = 100 if r < 0 else r + 100
                     board[1:row + 1, :] = board[0:row, :]
                     board[0, :] = 0
                     np.save("record/" + str(time.time()), board)

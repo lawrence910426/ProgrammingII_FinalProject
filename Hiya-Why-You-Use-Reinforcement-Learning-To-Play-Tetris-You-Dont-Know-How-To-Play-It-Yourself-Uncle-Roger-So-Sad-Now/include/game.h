@@ -22,7 +22,7 @@ class TetrisController;
 
 class Game {
  public:
-    Game(GameType, ALLEGRO_DISPLAY*, ALLEGRO_TIMER*);
+    Game(GameType, ALLEGRO_DISPLAY*, ALLEGRO_TIMER*, char name[], char host[]);
     ~Game();
 
     GameResult Start();
@@ -37,8 +37,10 @@ class Game {
     GameResult result;
     int place;
     bool is_multi = false;
+    std::string name;
+    static bool client_running;
 
-    void ReceiveAttack(int lines);
+    void ReceiveAttack(int attacker, int lines);
 
     std::list<SendLineAnimation *> send_line_animations;
 

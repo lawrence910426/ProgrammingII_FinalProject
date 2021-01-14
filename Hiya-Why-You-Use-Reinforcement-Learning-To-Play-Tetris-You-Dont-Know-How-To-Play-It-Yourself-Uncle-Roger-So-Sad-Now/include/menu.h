@@ -14,26 +14,23 @@ class Menu {
 
     GameType Start();
 
+    int namep = 0;
+    int hostp = 0;
+
+    static ALLEGRO_BITMAP *background_img;
+    static ALLEGRO_BITMAP *hiya_img;
  private:
-    static bool init;
+    static bool texture_loaded;
     ALLEGRO_EVENT_QUEUE *eventQueue;
 
-    void drawBackground();
+    MenuState state = MenuState::TITLE;
+
+    GameType selection = GameType::SINGLE;
+
+    bool handleKeyPress(int key);
+
+    void draw();
 
 
 
-};
-
-class MenuButton {
- public:
-    MenuButton(std::string title, ALLEGRO_COLOR color, Position pos);
-    void Draw();
-    void Select();
-    void Unselect();
-
- private:
-    std::string title;
-    ALLEGRO_COLOR color;
-    Position pos;
-    bool selected = false;
 };
