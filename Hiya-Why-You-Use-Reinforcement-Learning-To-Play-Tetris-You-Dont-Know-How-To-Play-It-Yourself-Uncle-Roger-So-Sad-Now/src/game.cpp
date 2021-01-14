@@ -233,7 +233,11 @@ void Game::updateScreen() {
 void Game::drawBackground() {
 
     /// Background
-    al_draw_filled_rectangle(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, BACKGROUND_COLOR);
+    //al_draw_filled_rectangle(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, BACKGROUND_COLOR);
+    al_draw_scaled_bitmap(Window::gameplay_bg, 0, 0,
+                          al_get_bitmap_width(Window::gameplay_bg), al_get_bitmap_height(Window::gameplay_bg),
+                          0, 0, WINDOW_WIDTH, WINDOW_HEIGHT,
+                          0);
 
     /// Gameplay Area
     // Background
@@ -342,7 +346,7 @@ void Game::drawMulti() const {
                                      MULTI_X[p] + MULTI_WIDTH, MULTI_Y[p] + MULTI_HEIGHT,
                                      al_map_rgba(20, 20, 20, 150));
         }
-        al_draw_text(Window::AirStrike30, al_map_rgb(50, 50, 50),
+        al_draw_text(Window::AirStrike30, al_map_rgb(210, 210, 210),
                      MULTI_X[p] + MULTI_WIDTH / 2.0,
                      MULTI_Y[p] + MULTI_HEIGHT,
                      ALLEGRO_ALIGN_CENTER, player_name.c_str());

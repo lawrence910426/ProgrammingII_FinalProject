@@ -44,6 +44,8 @@ class Window {
     static ALLEGRO_SAMPLE_ID menu_sampid;
     static ALLEGRO_SAMPLE_ID gameplay_sampid;
 
+    static ALLEGRO_BITMAP  *gameplay_bg;
+
 
 
     static char name[50];

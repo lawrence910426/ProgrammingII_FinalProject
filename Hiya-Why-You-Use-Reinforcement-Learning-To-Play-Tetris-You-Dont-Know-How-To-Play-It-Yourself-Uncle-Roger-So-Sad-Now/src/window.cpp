@@ -35,6 +35,8 @@ ALLEGRO_SAMPLE *Window::se_type;
 ALLEGRO_SAMPLE_ID Window::menu_sampid;
 ALLEGRO_SAMPLE_ID Window::gameplay_sampid;
 
+ALLEGRO_BITMAP *Window::gameplay_bg;
+
 char Window::name[50];
 char Window::host[50];
 
@@ -97,6 +99,9 @@ Window::Window() {
     se_type = al_load_sample("../assets/se_sys_cursor1.wav");
     se_select = al_load_sample("../assets/se_sys_select.wav");
 
+    se_select = al_load_sample("../assets/se_sys_select.wav");
+
+    gameplay_bg = al_load_bitmap("../assets/gameplay-bg.jpg");
 }
 
 Window::~Window() {
