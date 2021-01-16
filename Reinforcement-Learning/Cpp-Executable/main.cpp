@@ -6,7 +6,7 @@
 
 board *status = new board();
 ReinLearn *AI = new ReinLearn();
-Client *client = new Client("127.0.0.1", 7122);
+Client *client = new Client("192.168.45.68", 7122);
 
 void ListenLoop() { while(client->handle()) ; }
 
